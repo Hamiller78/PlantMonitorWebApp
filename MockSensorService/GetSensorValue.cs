@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System;
 using System.Net;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -18,9 +18,20 @@ namespace MockSensorService
             var response = req.CreateResponse(HttpStatusCode.OK);
             response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
 
-            response.WriteString("Welcome to Azure Functions!");
+            response.WriteString($"value={GetFakeValue()}");
 
             return response;
         }
+
+        private static double GetFakeValue()
+        {
+            DateTime currentTime = DateTime.Now;
+
+            // Return a value that declines over the course of a day from 1 to 0
+            double dailyDecline = 1d + Math.Sin(-currentTime.TimeOfDay.TotalSeconds / (24 * 60 * 60) * Math.PI / 2d);
+
+            return dailyDecline;
+        }
     }
+
 }
