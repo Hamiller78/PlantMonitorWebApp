@@ -1,9 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31729.503
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MockSensorService", "MockSensorService\MockSensorService.csproj", "{4DABB462-31E4-47C5-938E-A6F27651F1E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MockSensorService", "MockSensorService\MockSensorService.csproj", "{4DABB462-31E4-47C5-938E-A6F27651F1E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlantMonitorWebApp.Server", "PlantMonitorWebApp\Server\PlantMonitorWebApp.Server.csproj", "{D9464726-0502-4F5C-AF8F-9461502B3F37}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlantMonitorWebApp.Client", "PlantMonitorWebApp\Client\PlantMonitorWebApp.Client.csproj", "{6FC80981-D8C3-48A4-BA52-EA5B7A1C6A85}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlantMonitorWebApp.Shared", "PlantMonitorWebApp\Shared\PlantMonitorWebApp.Shared.csproj", "{F1172F6F-C7D4-4A0E-8BC6-ACC283FC9EA1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{4DABB462-31E4-47C5-938E-A6F27651F1E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4DABB462-31E4-47C5-938E-A6F27651F1E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4DABB462-31E4-47C5-938E-A6F27651F1E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9464726-0502-4F5C-AF8F-9461502B3F37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9464726-0502-4F5C-AF8F-9461502B3F37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9464726-0502-4F5C-AF8F-9461502B3F37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9464726-0502-4F5C-AF8F-9461502B3F37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FC80981-D8C3-48A4-BA52-EA5B7A1C6A85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FC80981-D8C3-48A4-BA52-EA5B7A1C6A85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FC80981-D8C3-48A4-BA52-EA5B7A1C6A85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FC80981-D8C3-48A4-BA52-EA5B7A1C6A85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1172F6F-C7D4-4A0E-8BC6-ACC283FC9EA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1172F6F-C7D4-4A0E-8BC6-ACC283FC9EA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1172F6F-C7D4-4A0E-8BC6-ACC283FC9EA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1172F6F-C7D4-4A0E-8BC6-ACC283FC9EA1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
