@@ -4,6 +4,9 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 
+using PlantMonitorWebApp.Shared.MockClasses;
+using PlantMonitorWebApp.Shared.TestClasses;
+
 namespace MockSensorService
 {
     public static class GetSensorValue
@@ -25,12 +28,9 @@ namespace MockSensorService
 
         private static double GetFakeValue()
         {
-            DateTime currentTime = DateTime.Now;
+            var valueSource = new MockDataSource(new SecondsOfDaySeedSource());
 
-            // Return a value that declines over the course of a day from 1 to 0
-            double dailyDecline = 1d + Math.Sin(-currentTime.TimeOfDay.TotalSeconds / (24 * 60 * 60) * Math.PI / 2d);
-
-            return dailyDecline;
+            return valueSource.GetCurrentValue();
         }
     }
 
