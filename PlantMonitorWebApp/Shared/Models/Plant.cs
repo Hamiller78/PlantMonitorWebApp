@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 using PlantMonitorWebApp.Shared.Interfaces;
 
-namespace PlantMonitorWebApp.Shared.Plants
+namespace PlantMonitorWebApp.Shared.Models
 {
-    public class PlantConfiguration
+    public class Plant
     {
         public string Name { get; set; } = "";
         public string Description { get; set; } = "";
-        // public Image Icon { get; set; }
+        public string ImageUrl { get; set; } = "";
         //public IDataSource SensorSource { get; set; } = null;
     }
 }

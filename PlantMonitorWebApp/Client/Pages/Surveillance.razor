@@ -1,6 +1,6 @@
 ﻿@page "/surveillance"
 @using PlantMonitorWebApp.Shared
-@using PlantMonitorWebApp.Shared.Plants
+@using PlantMonitorWebApp.Shared.Models
 @using PlantMonitorWebApp.Shared.TestClasses
 @inject HttpClient Http
 
@@ -11,16 +11,21 @@
 <p>Here we could put in a table view</p>
 
 <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced" PageSize="5" AllowPaging="true" AllowSorting="true"
-                Data="@plants" TItem="PlantConfiguration" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
+                Data="@plants" TItem="Plant" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
     <Columns>
-        <RadzenDataGridColumn TItem="PlantConfiguration" Property="Name" Filterable="true" Title="Name" Frozen="true" Width="140px" TextAlign="TextAlign.Center" />
-        <RadzenDataGridColumn TItem="PlantConfiguration" Property="Description" Title="Beschreibung" Frozen="true" Width="140px" />
+        <RadzenDataGridColumn TItem="Plant" Property="Name" Filterable="true" Title="Name" Frozen="true" Width="140px" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn TItem="Plant" Title="Foto" Frozen="true" Sortable="false" Filterable="false" Width="60px">
+            <Template Context="data">
+                <RadzenImage Path="@data.ImageUrl" style="width: 40px; height: 40px; border-radius: 8px;" />
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="Plant" Property="Description" Title="Beschreibung" Frozen="true" Width="140px" />
     </Columns>
 </RadzenDataGrid>
 
 
 @code {
-    private IEnumerable<PlantConfiguration>? plants;
+    private IEnumerable<Plant>? plants;
 
     protected override void OnInitialized()
     {
