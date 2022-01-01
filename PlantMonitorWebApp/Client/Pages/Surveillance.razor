@@ -8,8 +8,6 @@
 
 <h1>Surveillance</h1>
 
-<p>Here we could put in a table view</p>
-
 <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced" PageSize="5" AllowPaging="true" AllowSorting="true"
                 Data="@plants" TItem="Plant" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
     <Columns>
@@ -19,7 +17,7 @@
                 <RadzenImage Path="@data.ImageUrl" style="width: 40px; height: 40px; border-radius: 8px;" />
             </Template>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="Plant" Property="Description" Title="Beschreibung" Frozen="true" Width="140px" />
+        <RadzenDataGridColumn TItem="Plant" Property="Description" Title="Beschreibung" Frozen="true" Width="200px" />
         <RadzenDataGridColumn TItem="Plant" Property="FormattedSensorValue" Title="Messwert" Frozen="true" Width="7o0px" />
     </Columns>
 </RadzenDataGrid>
@@ -31,5 +29,11 @@
     protected override void OnInitialized()
     {
         plants = TestPlantProvider.GetTestPlantConfigurations();
+
+        // Re-check values every second
+        System.Timers.Timer t = new System.Timers.Timer();
+        t.Elapsed += (s, e) => { InvokeAsync(StateHasChanged); };
+        t.Interval = 1000;
+        t.Start();
     }
 }
