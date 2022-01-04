@@ -8,7 +8,8 @@ namespace PlantMonitorWebApp.Shared.TestClasses
     {
         public static IEnumerable<Plant> GetTestPlantConfigurations()
         {
-            IDataSource sensorDataSource = new MockDataSource(new SecondsOfDaySeedSource());
+            IDataSource sensorDataSource = new MockDailyData(new SecondsOfDaySeedSource());
+            IDataSource sensorDataSource2 = new MockSinePerMinuteData(new SecondsOfDaySeedSource());
             var plantList = new List<Plant>
             {
                 new Plant(sensorDataSource)
@@ -17,7 +18,7 @@ namespace PlantMonitorWebApp.Shared.TestClasses
                     Description = "Weihnachtsstern",
                     ImageUrl = "/Images/CactusPic.png"
                 },
-                new Plant(sensorDataSource)
+                new Plant(sensorDataSource2)
                 {
                     Name = "Mister Nancy",
                     Description = "Palme",

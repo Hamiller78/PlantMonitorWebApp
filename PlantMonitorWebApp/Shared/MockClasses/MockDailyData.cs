@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace PlantMonitorWebApp.Shared.MockClasses
 {
-    public class MockDataSource : IDataSource
+    public class MockDailyData : IDataSource
     {
-        private ISeedSource _seedSource;
+        private readonly ISeedSource _seedSource;
 
-        public MockDataSource(ISeedSource seedSource)
+        public MockDailyData(ISeedSource seedSource)
         {
             _seedSource = seedSource;
         } 

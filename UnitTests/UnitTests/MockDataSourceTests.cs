@@ -18,7 +18,7 @@ namespace UnitTests
                 x => x.GetSeedValue())
                       .Returns((long)rngGenerator.Next() << 32 + rngGenerator.Next());
 
-            IDataSource mockDataSource = new MockDataSource(MockSeedSource.Object);
+            IDataSource mockDataSource = new MockDailyData(MockSeedSource.Object);
             Assert.InRange(mockDataSource.GetCurrentValue(), 0d, 100d);
         }
 
@@ -28,7 +28,7 @@ namespace UnitTests
             var MockSeedSource = new Mock<ISeedSource>();
             MockSeedSource.Setup(x => x.GetSeedValue()).Returns(3333);
 
-            IDataSource mockDataSource = new MockDataSource(MockSeedSource.Object);
+            IDataSource mockDataSource = new MockDailyData(MockSeedSource.Object);
             double value1 = mockDataSource.GetCurrentValue();
             double value2 = mockDataSource.GetCurrentValue();
  
@@ -44,7 +44,7 @@ namespace UnitTests
                               .Returns(0)
                               .Returns(3333);
  
-            IDataSource mockDataSource = new MockDataSource(MockSeedSource.Object);
+            IDataSource mockDataSource = new MockDailyData(MockSeedSource.Object);
             double value1 = mockDataSource.GetCurrentValue();
             double value2 = mockDataSource.GetCurrentValue();
 
