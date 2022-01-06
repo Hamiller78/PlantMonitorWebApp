@@ -1,15 +1,26 @@
 using Microsoft.AspNetCore.ResponseCompression;
+using PlantMonitorWebApp.Server.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddSignalR();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+// From SignalR tutorial adding a ChatHub. Do we need this as well?
+builder.Services.AddResponseCompression(opts =>
+{
+    opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+        new[] { "application/octet-stream" });
+});
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseResponseCompression();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
@@ -31,6 +42,7 @@ app.UseRouting();
 
 app.MapRazorPages();
 app.MapControllers();
+app.MapHub<SensorValueHub>("/sensorvaluehub");
 app.MapFallbackToFile("index.html");
 
 app.Run();
