@@ -3,7 +3,7 @@
 @using PlantMonitorWebApp.Shared
 @using PlantMonitorWebApp.Shared.Models
 @using PlantMonitorWebApp.Shared.TestClasses
-@implements IAsyncDisposable
+@* implements IAsyncDisposable *@
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
 
@@ -21,18 +21,22 @@
             </Template>
         </RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="Plant" Property="Description" Title="Beschreibung" Frozen="true" Width="200px" />
-        <RadzenDataGridColumn TItem="Plant" Property="FormattedSensorValue" Title="Messwert" Frozen="true" Width="7o0px" />
+        <RadzenDataGridColumn TItem="Plant" Property="Sensor.FormattedSensorValue" Title="Messwert" Frozen="true" Width="7o0px" />
     </Columns>
 </RadzenDataGrid>
 
 
 @code {
+    private IEnumerable<Plant>? plants;
+    private IEnumerable<Sensor>? sensors;
     private HubConnection? _hubConnection;
     private List<string> _messages = new List<string>();
-    private IEnumerable<Plant>? _plants;
 
     protected override async Task OnInitializedAsync()
     {
+        InitSensors();
+        InitPlants();
+
         _hubConnection = new HubConnectionBuilder()
             .WithUrl(NavigationManager.ToAbsoluteUri("/sensorvaluehub"))
             .Build();
@@ -44,18 +48,54 @@
         });
 
         await _hubConnection.StartAsync();
+    }
 
-        //plants = TestPlantProvider.GetTestPlantConfigurations();
-        //
-        //// Re-check values every second
-        //System.Timers.Timer t = new System.Timers.Timer();
-        //t.Elapsed += (s, e) => { InvokeAsync(StateHasChanged); };
-        //t.Interval = 1000;
-        //t.Start();
+    private async Task Send()
+    {
+        if (_hubConnection is not null)
+        {
+            await _hubConnection.SendAsync("SensorValueChanged", "0", 0d);
+        }
+    }
+
+    public bool IsConnected =>
+        _hubConnection?.State == HubConnectionState.Connected;
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_hubConnection is not null)
+        {
+            await _hubConnection.DisposeAsync();
+        }
+    }
+
+    private void InitSensors()
+    {
+        sensors = new List<Sensor>
+        {
+            new Sensor() { SensorId = 1 },
+            new Sensor() { SensorId = 2 }
+        };
+    }
+
+    private void InitPlants()
+    {
+        plants = TestPlantProvider.GetTestPlantConfigurations();
     }
 
     private void UpdateSensor(string sensorId, double value)
     {
-        
+        if (sensors == null)
+        {
+            return;
+        }
+
+        foreach (Sensor sensor in sensors)
+        {
+            if (sensor.SensorId == Convert.ToInt32(sensorId))
+            {
+                sensor.SensorValue = value;
+            }
+        }
     }
 }

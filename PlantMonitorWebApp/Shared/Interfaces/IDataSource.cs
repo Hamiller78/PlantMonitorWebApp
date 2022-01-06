@@ -8,6 +8,6 @@ namespace PlantMonitorWebApp.Shared.Interfaces
 {
     public interface IDataSource
     {
-        double GetCurrentValue();
+        double SensorValue { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.ResponseCompression;
 using PlantMonitorWebApp.Server.Hubs;
+using PlantMonitorWebApp.Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSignalR();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddSingleton<SensorValueHub>();  // This was a guess to get the SensorValueHub with Clients injected into the MockSensorService, didn't work
 
 // From SignalR tutorial adding a ChatHub. Do we need this as well?
 builder.Services.AddResponseCompression(opts =>
@@ -15,6 +17,7 @@ builder.Services.AddResponseCompression(opts =>
     opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
         new[] { "application/octet-stream" });
 });
+builder.Services.AddHostedService<MockSensorService>();
 
 var app = builder.Build();
 

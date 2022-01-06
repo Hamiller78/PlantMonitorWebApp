@@ -9,6 +9,12 @@ namespace PlantMonitorWebApp.Shared.MockClasses
 {
     public class MockDailyData : IDataSource
     {
+        double IDataSource.SensorValue
+        {
+            get { return GetCurrentValue(); }
+            set { }
+        }
+
         private readonly ISeedSource _seedSource;
 
         public MockDailyData(ISeedSource seedSource)
