@@ -1,4 +1,5 @@
-﻿using PlantMonitorWebApp.Server.Hubs;
+﻿using Microsoft.AspNetCore.SignalR;
+using PlantMonitorWebApp.Server.Hubs;
 using PlantMonitorWebApp.Shared.Interfaces;
 using PlantMonitorWebApp.Shared.MockClasses;
 using PlantMonitorWebApp.Shared.TestClasses;
@@ -9,18 +10,18 @@ namespace PlantMonitorWebApp.Server.Services
     {
         private readonly ILogger<MockSensorService> _logger;
         private Timer _timer = null!;
-        private SensorValueHub _sensorValueHub;
+        private IHubContext<SensorValueHub> _sensorHubContext;
 
-        public MockSensorService(ILogger<MockSensorService> logger, SensorValueHub sensorValueHub)
+        public MockSensorService(ILogger<MockSensorService> logger, IHubContext<SensorValueHub> sensorHubContext)
         {
             _logger = logger;
-            _sensorValueHub = sensorValueHub;
+            _sensorHubContext = sensorHubContext;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _timer = new Timer(SendValues, null, TimeSpan.Zero,
-                TimeSpan.FromSeconds(5));
+                TimeSpan.FromSeconds(1));
 
             return Task.CompletedTask;
         }
@@ -43,8 +44,8 @@ namespace PlantMonitorWebApp.Server.Services
             IDataSource dataSource1 = new MockDailyData(seedSource);
             IDataSource dataSource2 = new MockSinePerMinuteData(seedSource);
 
-            _sensorValueHub.UpdateValue("1", dataSource1.SensorValue);
-            _sensorValueHub.UpdateValue("2", dataSource2.SensorValue);
+            _sensorHubContext.Clients.All.SendAsync("SensorValueChanged", "1", dataSource1.SensorValue);
+            _sensorHubContext.Clients.All.SendAsync("SensorValueChanged", "2", dataSource2.SensorValue);
         }
     }
 }
