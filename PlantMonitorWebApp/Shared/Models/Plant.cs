@@ -13,15 +13,11 @@ namespace PlantMonitorWebApp.Shared.Models
         public string Name { get; set; } = "";
         public string Description { get; set; } = "";
         public string ImageUrl { get; set; } = "";
+        public Sensor Sensor { get; set; }
 
-        public double SensorValue => _sensorSource?.GetCurrentValue() ?? 0d;
-        public string FormattedSensorValue => string.Format("{0,7:##0.000}%", 100 * SensorValue);
-
-        private readonly IDataSource? _sensorSource = null;
-
-        public Plant(IDataSource sensorSource)
+        public Plant(Sensor sensor)
         {
-            _sensorSource = sensorSource;
+            Sensor = sensor;
         }
     }
 }

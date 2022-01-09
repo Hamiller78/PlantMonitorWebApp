@@ -8,23 +8,26 @@ namespace PlantMonitorWebApp.Shared.TestClasses
     {
         public static IEnumerable<Plant> GetTestPlantConfigurations()
         {
-            IDataSource sensorDataSource = new MockDailyData(new SecondsOfDaySeedSource());
-            IDataSource sensorDataSource2 = new MockSinePerMinuteData(new SecondsOfDaySeedSource());
+            // IDataSource sensorDataSource = new MockDailyData(new SecondsOfDaySeedSource());
+            // IDataSource sensorDataSource2 = new MockSinePerMinuteData(new SecondsOfDaySeedSource());
+            Sensor sensor1 = new Sensor() { SensorId = 1 };
+            Sensor sensor2 = new Sensor() { SensorId = 2 };
+
             var plantList = new List<Plant>
             {
-                new Plant(sensorDataSource)
+                new Plant(sensor1)
                 {
                     Name = "Judith",
                     Description = "Weihnachtsstern",
                     ImageUrl = "/Images/CactusPic.png"
                 },
-                new Plant(sensorDataSource2)
+                new Plant(sensor2)
                 {
                     Name = "Mister Nancy",
                     Description = "Palme",
                     ImageUrl = "/Images/CactusPic.png"
                 },
-                new Plant(sensorDataSource)
+                new Plant(sensor1)
                 {
                     Name = "Harry",
                     Description = "Philodendron",

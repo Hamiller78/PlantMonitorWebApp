@@ -1,7 +1,10 @@
 ﻿@page "/surveillance"
+@using Microsoft.AspNetCore.SignalR.Client
 @using PlantMonitorWebApp.Shared
 @using PlantMonitorWebApp.Shared.Models
 @using PlantMonitorWebApp.Shared.TestClasses
+@* implements IAsyncDisposable *@
+@inject NavigationManager NavigationManager
 @inject HttpClient Http
 
 <PageTitle>Plant surveillance</PageTitle>
@@ -18,22 +21,67 @@
             </Template>
         </RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="Plant" Property="Description" Title="Beschreibung" Frozen="true" Width="200px" />
-        <RadzenDataGridColumn TItem="Plant" Property="FormattedSensorValue" Title="Messwert" Frozen="true" Width="7o0px" />
+        <RadzenDataGridColumn TItem="Plant" Property="Sensor.FormattedSensorValue" Title="Messwert" Frozen="true" Width="7o0px" />
     </Columns>
 </RadzenDataGrid>
 
 
 @code {
     private IEnumerable<Plant>? plants;
+    private HubConnection? _hubConnection;
+    private List<string> _messages = new List<string>();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
+    {
+        InitPlants();
+
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("/sensorvaluehub"))
+            .Build();
+
+        _hubConnection.On<string, double>("SensorValueChanged", (sensorId, value) =>
+        {
+            UpdateSensor(sensorId, value);
+            StateHasChanged();
+        });
+
+        await _hubConnection.StartAsync();
+    }
+
+    private async Task Send()
+    {
+        if (_hubConnection is not null)
+        {
+            await _hubConnection.SendAsync("SensorValueChanged", "0", 0d);
+        }
+    }
+
+    public bool IsConnected =>
+        _hubConnection?.State == HubConnectionState.Connected;
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_hubConnection is not null)
+        {
+            await _hubConnection.DisposeAsync();
+        }
+    }
+
+    private void InitPlants()
     {
         plants = TestPlantProvider.GetTestPlantConfigurations();
+    }
 
-        // Re-check values every second
-        System.Timers.Timer t = new System.Timers.Timer();
-        t.Elapsed += (s, e) => { InvokeAsync(StateHasChanged); };
-        t.Interval = 1000;
-        t.Start();
+    private void UpdateSensor(string sensorId, double value)
+    {
+        // Leaves in theory some room for improvement (same sensor can be updated multiple times)
+        // In practice each sensor will only be assigned to one plant
+        foreach (Plant plant in plants)
+        {
+            if (plant.Sensor.SensorId == Convert.ToInt32(sensorId))
+            {
+                plant.Sensor.SensorValue = value;
+            }
+        }
     }
 }
