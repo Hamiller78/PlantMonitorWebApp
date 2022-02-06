@@ -17,7 +17,8 @@ builder.Services.AddResponseCompression(opts =>
     opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
         new[] { "application/octet-stream" });
 });
-builder.Services.AddHostedService<MockSensorService>();
+// builder.Services.AddHostedService<MockSensorService>();
+builder.Services.AddHostedService<RestSensorService>();
 
 var app = builder.Build();
 
