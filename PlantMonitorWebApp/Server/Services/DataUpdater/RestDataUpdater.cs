@@ -9,11 +9,14 @@ namespace PlantMonitorWebApp.Server.Services.DataUpdater
         private IDataSourceFactory _dataSourceFactory;
         private IConfiguration _config;
         private IMessageSender _messageSender;
-        private ILogger _logger;
+        private ILogger<RestDataUpdater> _logger;
 
         private Dictionary<string, IDataSource> _restDataSources = new();
 
-        public RestDataUpdater(IDataSourceFactory dataSourceFactory, IConfiguration config, IMessageSender messageSender, ILogger logger)
+        public RestDataUpdater(IDataSourceFactory dataSourceFactory,
+                               IConfiguration config,
+                               IMessageSender messageSender,
+                               ILogger<RestDataUpdater> logger)
         {
             _dataSourceFactory = dataSourceFactory;
             _config = config;

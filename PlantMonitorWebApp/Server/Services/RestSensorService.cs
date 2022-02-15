@@ -10,11 +10,11 @@ namespace PlantMonitorWebApp.Server.Services
 {
     public class RestSensorService : IHostedService, IDisposable
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<RestSensorService> _logger;
         private Timer _timer = null!;
         private IDataUpdater _dataUpdater;
 
-        public RestSensorService(IDataUpdater dataUpdater, ILogger logger)
+        public RestSensorService(IDataUpdater dataUpdater, ILogger<RestSensorService> logger)
         {
             _logger = logger;
             _dataUpdater = dataUpdater;
