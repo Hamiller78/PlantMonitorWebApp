@@ -13,13 +13,13 @@ namespace UnitTests
 {
     public class RestDataUpdaterTests : IDisposable
     {
-        private ILogger _logger;
+        private ILogger<RestDataUpdater> _logger;
         private Mock<IDataSourceFactory> _dataSourceFactoryMock;
         private Mock<IMessageSender> _messageSenderMock;
 
         public RestDataUpdaterTests()
         {
-            _logger = new Mock<ILogger>().Object;
+            _logger = new Mock<ILogger<RestDataUpdater>>().Object;
             _dataSourceFactoryMock = new Mock<IDataSourceFactory>();
             _messageSenderMock = new Mock<IMessageSender>();
         }
