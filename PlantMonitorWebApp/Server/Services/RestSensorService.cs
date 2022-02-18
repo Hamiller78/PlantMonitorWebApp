@@ -1,18 +1,12 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using PlantMonitorWebApp.Server.Hubs;
+﻿using Microsoft.Extensions.Hosting;
 using PlantMonitorWebApp.Server.Interfaces;
-using PlantMonitorWebApp.Shared.DataSources;
-using PlantMonitorWebApp.Shared.Interfaces;
-using PlantMonitorWebApp.Shared.MockClasses;
-using PlantMonitorWebApp.Shared.TestClasses;
 
 namespace PlantMonitorWebApp.Server.Services
 {
-    public class RestSensorService : IHostedService, IDisposable
+    public class RestSensorService : BackgroundService
     {
         private readonly ILogger<RestSensorService> _logger;
-        private Timer _timer = null!;
-        private IDataUpdater _dataUpdater;
+        private readonly IDataUpdater _dataUpdater;
 
         public RestSensorService(IDataUpdater dataUpdater, ILogger<RestSensorService> logger)
         {
@@ -20,24 +14,31 @@ namespace PlantMonitorWebApp.Server.Services
             _dataUpdater = dataUpdater;
         }
 
-        public Task StartAsync(CancellationToken cancellationToken)
+        protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _timer = new Timer(_dataUpdater.RefreshData, null, TimeSpan.Zero,
-                TimeSpan.FromSeconds(1));
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                await Task.Delay(1000, stoppingToken);
 
-            return Task.CompletedTask;
-        }
+                try
+                {
+                    var workTask = _dataUpdater.RefreshData(null);
+                    var cancelTask = Task.Delay(1000, stoppingToken);
 
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            _timer?.Change(Timeout.Infinite, 0);
+                    //double await so exceptions from either task will bubble up
+                    await await Task.WhenAny(workTask, cancelTask);
 
-            return Task.CompletedTask;
-        }
+                    if (!workTask.IsCompletedSuccessfully)
+                    {
+                        _logger.LogError("Updater didn't complete successfully");
+                    }
 
-        public void Dispose()
-        {
-            _timer?.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError("Exception while updating sensor values.", ex.Message);
+                }
+            }
         }
     }
 }

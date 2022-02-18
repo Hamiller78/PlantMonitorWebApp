@@ -2,6 +2,6 @@
 {
     public interface IDataUpdater
     {
-        void RefreshData(object? state);
+        Task RefreshData(object? state);
     }
 }

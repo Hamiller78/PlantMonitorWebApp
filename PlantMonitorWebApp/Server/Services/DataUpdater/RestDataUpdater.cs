@@ -25,12 +25,12 @@ namespace PlantMonitorWebApp.Server.Services.DataUpdater
             CreateDataSourcesFromConfig();
         }
 
-        public void RefreshData(object? state)
+        public async Task RefreshData(object? state)
         {
             foreach (var dataSource in _restDataSources)
             {
                 double newValue = dataSource.Value.SensorValue;
-                _messageSender.SendSensorValueChanged(dataSource.Key, newValue);
+                await _messageSender.SendSensorValueChanged(dataSource.Key, newValue);
             }
         }
 
