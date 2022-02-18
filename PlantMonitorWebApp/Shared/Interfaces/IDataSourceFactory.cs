@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace PlantMonitorWebApp.Shared.Interfaces
 {
-    public interface IDataSource
+    public interface IDataSourceFactory
     {
-        double SensorValue { get; }
+        IDataSource CreateDataSource(object parameter);
     }
 }

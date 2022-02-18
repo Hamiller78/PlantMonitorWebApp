@@ -10,9 +10,9 @@ namespace PlantMonitorWebApp.Server.Services
     {
         private readonly ILogger<MockSensorService> _logger;
         private Timer _timer = null!;
-        private IHubContext<SensorValueHub> _sensorHubContext;
+        private IHubContext<SensorSignalRSender> _sensorHubContext;
 
-        public MockSensorService(ILogger<MockSensorService> logger, IHubContext<SensorValueHub> sensorHubContext)
+        public MockSensorService(ILogger<MockSensorService> logger, IHubContext<SensorSignalRSender> sensorHubContext)
         {
             _logger = logger;
             _sensorHubContext = sensorHubContext;

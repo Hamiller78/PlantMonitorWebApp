@@ -10,8 +10,8 @@ namespace PlantMonitorWebApp.Shared.TestClasses
         {
             // IDataSource sensorDataSource = new MockDailyData(new SecondsOfDaySeedSource());
             // IDataSource sensorDataSource2 = new MockSinePerMinuteData(new SecondsOfDaySeedSource());
-            Sensor sensor1 = new Sensor() { SensorId = 1 };
-            Sensor sensor2 = new Sensor() { SensorId = 2 };
+            Sensor sensor1 = new Sensor() { SensorId = 0 };
+            Sensor sensor2 = new Sensor() { SensorId = 1 };
 
             var plantList = new List<Plant>
             {

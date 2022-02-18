@@ -1,6 +1,12 @@
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Extensions.Logging;
 using PlantMonitorWebApp.Server.Hubs;
+using PlantMonitorWebApp.Server.Interfaces;
 using PlantMonitorWebApp.Server.Services;
+using PlantMonitorWebApp.Server.Services.DataUpdater;
+using PlantMonitorWebApp.Server.Services.MessageSender;
+using PlantMonitorWebApp.Shared.Factories;
+using PlantMonitorWebApp.Shared.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +15,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSignalR();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-builder.Services.AddSingleton<SensorValueHub>();  // This was a guess to get the SensorValueHub with Clients injected into the MockSensorService, didn't work
+builder.Services.AddLogging(logging => logging.AddConsole());
+builder.Services.AddSingleton<SensorSignalRSender>();
+builder.Services.AddSingleton<IDataUpdater, RestDataUpdater>();
+builder.Services.AddSingleton<IMessageSender, SignalRSender>();
+builder.Services.AddSingleton<IDataSourceFactory, RestDataSourceFactory>();
 
 // From SignalR tutorial adding a ChatHub. Do we need this as well?
 builder.Services.AddResponseCompression(opts =>
@@ -17,7 +27,8 @@ builder.Services.AddResponseCompression(opts =>
     opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
         new[] { "application/octet-stream" });
 });
-builder.Services.AddHostedService<MockSensorService>();
+// builder.Services.AddHostedService<MockSensorService>();
+builder.Services.AddHostedService<RestSensorService>();
 
 var app = builder.Build();
 
@@ -45,7 +56,7 @@ app.UseRouting();
 
 app.MapRazorPages();
 app.MapControllers();
-app.MapHub<SensorValueHub>("/sensorvaluehub");
+app.MapHub<SensorSignalRSender>("/sensorvaluehub");
 app.MapFallbackToFile("index.html");
 
 app.Run();

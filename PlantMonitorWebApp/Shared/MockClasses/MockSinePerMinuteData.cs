@@ -12,7 +12,6 @@ namespace PlantMonitorWebApp.Shared.MockClasses
         double IDataSource.SensorValue
         {
             get { return GetCurrentValue(); }
-            set { }
         }
 
         private readonly ISeedSource _seedSource;
