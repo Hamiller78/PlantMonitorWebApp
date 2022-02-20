@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using PlantMonitorWebApp.Repository;
 using PlantMonitorWebApp.Server.Hubs;
 using PlantMonitorWebApp.Server.Interfaces;
 using PlantMonitorWebApp.Server.Services;
@@ -9,13 +11,17 @@ using PlantMonitorWebApp.Shared.Factories;
 using PlantMonitorWebApp.Shared.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
 
 // Add services to the container.
 
 builder.Services.AddSignalR();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+builder.Services.AddDbContext<PlantAppContext>(options => options.UseSqlite(configuration["ConnectionStrings:SQLite"]));
 builder.Services.AddLogging(logging => logging.AddConsole());
+
 builder.Services.AddSingleton<SensorSignalRSender>();
 builder.Services.AddSingleton<IDataUpdater, RestDataUpdater>();
 builder.Services.AddSingleton<IMessageSender, SignalRSender>();
