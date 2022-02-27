@@ -5,12 +5,10 @@ namespace PlantMonitorWebApp.Repository
 {
     public class PlantAppContext : DbContext
     {
-        public DbSet<Plant> Plants { get; set; } 
+        public DbSet<Plant> Plants { get; set; }
         public DbSet<Sensor> Sensors { get; set; }
 
-        public PlantAppContext(DbContextOptions<PlantAppContext> options) : base(options)
-        {
-        }
+        public PlantAppContext(DbContextOptions<PlantAppContext> options) : base(options) {}
 
         protected override void OnModelCreating(ModelBuilder modelbuilder)
         {

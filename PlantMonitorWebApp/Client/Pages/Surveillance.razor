@@ -78,7 +78,7 @@
         // In practice each sensor will only be assigned to one plant
         foreach (Plant plant in plants)
         {
-            if (plant.Sensor.SensorId == Convert.ToInt32(sensorId))
+            if (plant.Sensor.Id == Convert.ToInt32(sensorId))
             {
                 plant.Sensor.SensorValue = value;
             }

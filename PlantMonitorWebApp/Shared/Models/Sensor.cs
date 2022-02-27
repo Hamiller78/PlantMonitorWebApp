@@ -9,7 +9,7 @@ namespace PlantMonitorWebApp.Shared.Models
 {
     public class Sensor : IDataSource
     {
-        public int SensorId { get; set; } = 0;
+        public int Id { get; set; } = 0;
         public double SensorValue { get; set; } = 0d;
         public string FormattedSensorValue => string.Format("{0,7:##0.000}%", 100 * SensorValue);
     }

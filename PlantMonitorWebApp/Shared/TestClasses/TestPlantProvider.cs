@@ -6,28 +6,26 @@ namespace PlantMonitorWebApp.Shared.TestClasses
 {
     public static class TestPlantProvider
     {
+
         public static IEnumerable<Plant> GetTestPlantConfigurations()
         {
-            // IDataSource sensorDataSource = new MockDailyData(new SecondsOfDaySeedSource());
-            // IDataSource sensorDataSource2 = new MockSinePerMinuteData(new SecondsOfDaySeedSource());
-            Sensor sensor1 = new Sensor() { SensorId = 0 };
-            Sensor sensor2 = new Sensor() { SensorId = 1 };
+            List<Sensor> sensorList = GetTestSensors();
 
             var plantList = new List<Plant>
             {
-                new Plant(sensor1)
+                new Plant(sensorList[0])
                 {
                     Name = "Judith",
                     Description = "Weihnachtsstern",
                     ImageUrl = "/Images/CactusPic.png"
                 },
-                new Plant(sensor2)
+                new Plant(sensorList[1])
                 {
                     Name = "Mister Nancy",
                     Description = "Palme",
                     ImageUrl = "/Images/CactusPic.png"
                 },
-                new Plant(sensor1)
+                new Plant(sensorList[0])
                 {
                     Name = "Harry",
                     Description = "Philodendron",
@@ -36,6 +34,15 @@ namespace PlantMonitorWebApp.Shared.TestClasses
             };
 
             return plantList;
+        }
+
+        public static List<Sensor> GetTestSensors()
+        {
+            return new List<Sensor>()
+            {
+                new Sensor() { Id = 0 },
+                new Sensor() { Id = 1 }
+            };
         }
     }
 }
