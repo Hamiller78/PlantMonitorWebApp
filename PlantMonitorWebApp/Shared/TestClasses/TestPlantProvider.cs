@@ -40,8 +40,8 @@ namespace PlantMonitorWebApp.Shared.TestClasses
         {
             return new List<Sensor>()
             {
-                new Sensor() { Id = 0 },
-                new Sensor() { Id = 1 }
+                new Sensor(),
+                new Sensor()
             };
         }
     }

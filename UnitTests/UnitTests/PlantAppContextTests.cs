@@ -40,11 +40,13 @@ namespace UnitTests
 
             context.Database.EnsureCreated();
 
-            IEnumerable<Plant> plantList = TestPlantProvider.GetTestPlantConfigurations();
-            foreach (Plant plant in plantList)
-            {
-                
-            }
+            IEnumerable<Sensor> sensorList = TestPlantProvider.GetTestSensors();
+            context.Sensors.AddRange(sensorList);
+
+            context.SaveChanges();
+
+            List<Sensor> loadedSensors = context.Sensors.ToListAsync().Result;
+            Assert.Equal(2, loadedSensors.Count);
         }
 
     }
