@@ -13,19 +13,19 @@ namespace PlantMonitorWebApp.Shared.TestClasses
 
             var plantList = new List<Plant>
             {
-                new Plant(sensorList[0])
+                new Plant(sensorList[1])
                 {
                     Name = "Judith",
                     Description = "Weihnachtsstern",
                     ImageUrl = "/Images/CactusPic.png"
                 },
-                new Plant(sensorList[1])
+                new Plant(sensorList[2])
                 {
                     Name = "Mister Nancy",
                     Description = "Palme",
                     ImageUrl = "/Images/CactusPic.png"
                 },
-                new Plant(sensorList[0])
+                new Plant(sensorList[1])
                 {
                     Name = "Harry",
                     Description = "Philodendron",
