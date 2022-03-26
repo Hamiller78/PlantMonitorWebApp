@@ -1,24 +1,29 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 using PlantMonitorWebApp.Repository.Interfaces;
 using PlantMonitorWebApp.Shared.Models;
 
 namespace PlantMonitorWebApp.Server.Controllers
 {
-    public class Plants : ControllerBase
+    [ApiController]
+    [Route("Plants")]
+    public class PlantController : ControllerBase
     {
         readonly IPlantInterface _plantRepo;
 
-        public Plants(IPlantInterface plantRepo) => _plantRepo = plantRepo;
+        public PlantController(IPlantInterface plantRepo) => _plantRepo = plantRepo;
 
         // GET: Plants/List
+        [HttpGet]
+        [Route("GetList")]
         public IActionResult List()
         {
             return Ok(_plantRepo.GetAll());
         }
 
         // GET: Plants/Item/5
+        [HttpGet]
+        [Route("GetItem")]
         public IActionResult Item(int id)
         {
             Plant? plant = _plantRepo.GetById(id);

@@ -11,7 +11,7 @@ namespace PlantMonitorWebApp.Repository.Classes
 {
     public class PlantRepository : IPlantInterface
     {
-        PlantAppContext _context;
+        readonly PlantAppContext _context;
 
         public PlantRepository(PlantAppContext context) => _context = context;
 

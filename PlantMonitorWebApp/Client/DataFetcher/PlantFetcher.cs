@@ -13,13 +13,13 @@ namespace PlantMonitorWebApp.Client.DataFetcher
 
         public async Task<IEnumerable<Plant>> FetchPlantsAsync()
         {
-            var plants = await _client.GetFromJsonAsync<IEnumerable<Plant>>("Plants") ?? new List<Plant>();
+            var plants = await _client.GetFromJsonAsync<IEnumerable<Plant>>("Plant") ?? new List<Plant>();
             return plants;
         }
 
         public async Task<Plant?> GetPlantByIdAsync(int id)
         {
-            var plant = await _client.GetFromJsonAsync<Plant>($"Plants/Item/{id.ToString().Trim()}");
+            var plant = await _client.GetFromJsonAsync<Plant>($"Plant/Item/{id.ToString().Trim()}");
             return plant;
         }
     }
