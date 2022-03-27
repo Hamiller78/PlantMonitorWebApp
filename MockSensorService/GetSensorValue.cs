@@ -12,7 +12,8 @@ namespace MockSensorService
     public static class GetSensorValue
     {
         [Function("GetSensorValue")]
-        public static HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = "GetSensorValue/{id}")] HttpRequestData req,
+        public static HttpResponseData Run(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "GetSensorValue/{id}")] HttpRequestData req,
             string id,
             FunctionContext executionContext)
         {
