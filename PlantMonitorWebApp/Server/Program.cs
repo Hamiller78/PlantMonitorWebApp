@@ -21,7 +21,14 @@ builder.Services.AddSignalR();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-builder.Services.AddDbContext<PlantAppContext>(options => options.UseSqlite(configuration["ConnectionStrings:SQLite"]));
+if (builder.Environment.IsProduction())
+{
+    builder.Services.AddDbContext<PlantAppContext>(options => options.UseNpgsql(configuration["ConnectionStrings:PlantWebDb"]));
+}
+else
+{
+    builder.Services.AddDbContext<PlantAppContext>(options => options.UseSqlite(configuration["ConnectionStrings:SQLite"]));
+}
 builder.Services.AddLogging(logging => logging.AddConsole());
 
 builder.Services.AddSingleton<SensorSignalRSender>();
@@ -36,7 +43,6 @@ builder.Services.AddResponseCompression(opts =>
     opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
         new[] { "application/octet-stream" });
 });
-// builder.Services.AddHostedService<MockSensorService>();
 builder.Services.AddHostedService<RestSensorService>();
 
 var app = builder.Build();
@@ -47,10 +53,12 @@ app.UseResponseCompression();
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
+    app.UseDeveloperExceptionPage();
 }
 else
 {
-    app.UseExceptionHandler("/Error");
+    // app.UseExceptionHandler("/Error");
+    app.UseDeveloperExceptionPage();  // Good enough for the early stage, bad practice for real production code
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
@@ -61,7 +69,6 @@ app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 
 app.UseRouting();
-
 
 app.MapRazorPages();
 app.MapControllers();

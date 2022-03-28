@@ -25,7 +25,7 @@ namespace UnitTests
             //_connection.Open();
 
             _contextOptions = new DbContextOptionsBuilder<PlantAppContext>()
-                .UseNpgsql("xxx")
+                .UseSqlite("Data Source=C://TEMP/PLANTAPPDB1.sqlite;")
                 .Options;
         }
 
@@ -42,15 +42,16 @@ namespace UnitTests
 
             context.Database.EnsureCreated();
 
-            // IEnumerable<Sensor> sensorList = TestPlantProvider.GetTestSensors();
+            IEnumerable<Sensor> sensorList = TestPlantProvider.GetTestSensors();
             //context.Sensors.AddRange(sensorList);
+            //context.SaveChanges();
 
             List<Plant> plantList = TestPlantProvider.GetTestPlants();
             List<Sensor> loadedSensors = context.Sensors.ToListAsync().Result;
             plantList[0].Sensor = loadedSensors.Where(s => s.Id == 1).First();
             plantList[1].Sensor = loadedSensors.Where(s => s.Id == 2).First();
             plantList[2].Sensor = loadedSensors.Where(s => s.Id == 1).First();
-            context.Plants.AddRange(plantList);
+            //context.Plants.AddRange(plantList);
             context.SaveChanges();
 
             Assert.Equal(3, context.Plants.ToList().Count);

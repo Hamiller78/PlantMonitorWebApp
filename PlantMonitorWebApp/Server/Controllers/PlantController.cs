@@ -6,7 +6,7 @@ using PlantMonitorWebApp.Shared.Models;
 namespace PlantMonitorWebApp.Server.Controllers
 {
     [ApiController]
-    [Route("Plants")]
+    [Route("/Plants")]
     public class PlantController : ControllerBase
     {
         readonly IPlantInterface _plantRepo;
@@ -14,16 +14,14 @@ namespace PlantMonitorWebApp.Server.Controllers
         public PlantController(IPlantInterface plantRepo) => _plantRepo = plantRepo;
 
         // GET: Plants/List
-        [HttpGet]
-        [Route("GetList")]
+        [HttpGet("GetList")]
         public IActionResult List()
         {
             return Ok(_plantRepo.GetAll());
         }
 
         // GET: Plants/Item/5
-        [HttpGet]
-        [Route("GetItem")]
+        [HttpGet("Item/{id}")]
         public IActionResult Item(int id)
         {
             Plant? plant = _plantRepo.GetById(id);
