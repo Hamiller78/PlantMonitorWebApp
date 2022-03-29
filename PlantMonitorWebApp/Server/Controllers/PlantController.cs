@@ -9,9 +9,9 @@ namespace PlantMonitorWebApp.Server.Controllers
     [Route("/Plants")]
     public class PlantController : ControllerBase
     {
-        readonly IPlantInterface _plantRepo;
+        readonly IPlantRepository _plantRepo;
 
-        public PlantController(IPlantInterface plantRepo) => _plantRepo = plantRepo;
+        public PlantController(IPlantRepository plantRepo) => _plantRepo = plantRepo;
 
         // GET: Plants/List
         [HttpGet("GetList")]

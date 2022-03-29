@@ -35,7 +35,8 @@ builder.Services.AddSingleton<SensorSignalRSender>();
 builder.Services.AddSingleton<IDataUpdater, RestDataUpdater>();
 builder.Services.AddSingleton<IMessageSender, SignalRSender>();
 builder.Services.AddSingleton<IDataSourceFactory, RestDataSourceFactory>();
-builder.Services.AddScoped<IPlantInterface, PlantRepository>();
+builder.Services.AddScoped<IPlantRepository, PlantRepository>();
+builder.Services.AddScoped<ISensorRepository, SensorRepository>();
 
 // From SignalR tutorial adding a ChatHub. Do we need this as well?
 builder.Services.AddResponseCompression(opts =>

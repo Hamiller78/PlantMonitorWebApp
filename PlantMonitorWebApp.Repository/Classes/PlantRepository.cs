@@ -1,16 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using PlantMonitorWebApp.Repository.Interfaces;
 using PlantMonitorWebApp.Shared.Models;
 
 namespace PlantMonitorWebApp.Repository.Classes
 {
-    public class PlantRepository : IPlantInterface
+    public class PlantRepository : IPlantRepository
     {
         readonly PlantAppContext _context;
 
