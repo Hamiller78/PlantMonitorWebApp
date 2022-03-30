@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.AzureAppServices;
+
 using PlantMonitorWebApp.Repository;
 using PlantMonitorWebApp.Repository.Classes;
 using PlantMonitorWebApp.Repository.Interfaces;
@@ -14,6 +15,7 @@ using PlantMonitorWebApp.Shared.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
+configuration.AddEnvironmentVariables();  // to load Azure WebApp configuration variables
 
 // Add services to the container.
 
@@ -23,13 +25,26 @@ builder.Services.AddRazorPages();
 
 if (builder.Environment.IsProduction())
 {
-    builder.Services.AddDbContext<PlantAppContext>(options => options.UseNpgsql(configuration["ConnectionStrings:PlantWebDb"]));
+    // builder.Services.AddDbContext<PlantAppContext>(options => options.UseNpgsql(configuration.GetConnectionString("PlantWebDb")));
+    builder.Services.AddDbContext<PlantAppContext>(options => options.UseNpgsql("Server=plantdatabase.postgres.database.azure.com;Database=plantdb;Port=5432;User Id=dbadmin;Password=PlaOthello3:16;Ssl Mode=VerifyFull;"));
 }
 else
 {
-    builder.Services.AddDbContext<PlantAppContext>(options => options.UseSqlite(configuration["ConnectionStrings:SQLite"]));
+    builder.Services.AddDbContext<PlantAppContext>(options => options.UseSqlite(configuration.GetConnectionString("SQLite")));
 }
-builder.Services.AddLogging(logging => logging.AddConsole());
+builder.Services.AddLogging(logging =>
+{
+    logging.ClearProviders();
+    logging.AddConsole();
+    logging.AddDebug();
+    logging.AddAzureWebAppDiagnostics();
+});
+builder.Services.Configure<AzureFileLoggerOptions>(configuration =>
+{
+    configuration.FileName = "my-azure-diagnostics";
+    configuration.FileSizeLimit = 1024;
+    configuration.RetainedFileCountLimit = 5;
+});
 
 builder.Services.AddSingleton<SensorSignalRSender>();
 builder.Services.AddSingleton<IDataUpdater, RestDataUpdater>();
