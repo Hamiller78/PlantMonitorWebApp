@@ -17,6 +17,12 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 configuration.AddEnvironmentVariables();  // to load Azure WebApp configuration variables
 
+//builder.Host.ConfigureAppConfiguration(builder =>
+//{
+//    //Connect to your App Config Store using the connection string
+//    builder.AddEnvironmentVariables();
+//});
+
 // Add services to the container.
 
 builder.Services.AddSignalR();
@@ -26,7 +32,7 @@ builder.Services.AddRazorPages();
 if (builder.Environment.IsProduction())
 {
     // builder.Services.AddDbContext<PlantAppContext>(options => options.UseNpgsql(configuration.GetConnectionString("PlantWebDb")));
-    builder.Services.AddDbContext<PlantAppContext>(options => options.UseNpgsql("Server=plantdatabase.postgres.database.azure.com;Database=plantdb;Port=5432;User Id=dbadmin;Password=PlaOthello3:16;Ssl Mode=VerifyFull;"));
+    builder.Services.AddDbContext<PlantAppContext>(options => options.UseNpgsql(configuration.GetConnectionString("PlantWebDb")));
 }
 else
 {
