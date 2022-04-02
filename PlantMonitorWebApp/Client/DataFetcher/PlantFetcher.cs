@@ -7,13 +7,13 @@ namespace PlantMonitorWebApp.Client.DataFetcher
 {
     public class PlantFetcher : IPlantFetcher
     {
-        HttpClient _client;
+        readonly HttpClient _client;
 
         public PlantFetcher(HttpClient client) => _client = client;
 
         public async Task<IEnumerable<Plant>> FetchPlantsAsync()
         {
-            var plants = await _client.GetFromJsonAsync<IEnumerable<Plant>>("Plant") ?? new List<Plant>();
+            var plants = await _client.GetFromJsonAsync<IEnumerable<Plant>>("Plants/GetList") ?? new List<Plant>();
             return plants;
         }
 

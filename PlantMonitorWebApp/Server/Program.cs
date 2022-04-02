@@ -31,7 +31,6 @@ builder.Services.AddRazorPages();
 
 if (builder.Environment.IsProduction())
 {
-    // builder.Services.AddDbContext<PlantAppContext>(options => options.UseNpgsql(configuration.GetConnectionString("PlantWebDb")));
     builder.Services.AddDbContext<PlantAppContext>(options => options.UseNpgsql(configuration.GetConnectionString("PlantWebDb")));
 }
 else
