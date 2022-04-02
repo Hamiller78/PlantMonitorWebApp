@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlantMonitorWebApp.Client",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlantMonitorWebApp.Shared", "PlantMonitorWebApp\Shared\PlantMonitorWebApp.Shared.csproj", "{F1172F6F-C7D4-4A0E-8BC6-ACC283FC9EA1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests\UnitTests.csproj", "{5CA6E767-A0ED-47E4-BBC6-3DC0342262C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests\UnitTests.csproj", "{5CA6E767-A0ED-47E4-BBC6-3DC0342262C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlantMonitorWebApp.Repository", "PlantMonitorWebApp.Repository\PlantMonitorWebApp.Repository.csproj", "{FB751E6E-F974-4B26-A478-717201626549}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{5CA6E767-A0ED-47E4-BBC6-3DC0342262C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5CA6E767-A0ED-47E4-BBC6-3DC0342262C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5CA6E767-A0ED-47E4-BBC6-3DC0342262C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB751E6E-F974-4B26-A478-717201626549}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB751E6E-F974-4B26-A478-717201626549}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB751E6E-F974-4B26-A478-717201626549}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB751E6E-F974-4B26-A478-717201626549}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

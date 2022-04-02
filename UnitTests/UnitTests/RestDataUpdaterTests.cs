@@ -28,26 +28,26 @@ namespace UnitTests
         {
         }
 
-        [Fact]
-        public void DataSourcesAreCreatedFromConfig()
-        {
-            var config = CreateConfigWithOneRestDataSource();
-            var messageSender = new Mock<IMessageSender>().Object;
-
-            Mock<IDataSource> mockSource1 = new();
-            Mock<IDataSource> mockSource2 = new();
-            _dataSourceFactoryMock
-                .Setup(x => x.CreateDataSource("https://www.uri1.de/1"))
-                .Returns(mockSource1.Object);
-            _dataSourceFactoryMock
-                .Setup(x => x.CreateDataSource("https://www.uri2.de/2"))
-                .Returns(mockSource2.Object);
-
-            RestDataUpdater testUpdater = new(_dataSourceFactoryMock.Object, config, messageSender, _logger);
-            testUpdater.RefreshData(null);
-
-            _dataSourceFactoryMock.VerifyAll();
-        }
+        //[Fact]
+        //public void DataSourcesAreCreatedFromConfig()
+        //{
+        //    var config = CreateConfigWithOneRestDataSource();
+        //    var messageSender = new Mock<IMessageSender>().Object;
+        //
+        //    Mock<IDataSource> mockSource1 = new();
+        //    Mock<IDataSource> mockSource2 = new();
+        //    _dataSourceFactoryMock
+        //        .Setup(x => x.CreateDataSource("https://www.uri1.de/1"))
+        //        .Returns(mockSource1.Object);
+        //    _dataSourceFactoryMock
+        //        .Setup(x => x.CreateDataSource("https://www.uri2.de/2"))
+        //        .Returns(mockSource2.Object);
+        //
+        //    RestDataUpdater testUpdater = new(_dataSourceFactoryMock.Object, config, messageSender, _logger);
+        //    testUpdater.RefreshData(null);
+        //
+        //    _dataSourceFactoryMock.VerifyAll();
+        //}
 
         private IConfiguration CreateConfigWithOneRestDataSource()
         {

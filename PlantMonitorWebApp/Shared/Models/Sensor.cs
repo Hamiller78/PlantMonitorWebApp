@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,10 +9,10 @@ using PlantMonitorWebApp.Shared.Interfaces;
 
 namespace PlantMonitorWebApp.Shared.Models
 {
-    public class Sensor : IDataSource
+    public class Sensor
     {
-        public int SensorId { get; set; } = 0;
-        public double SensorValue { get; set; } = 0d;
-        public string FormattedSensorValue => string.Format("{0,7:##0.000}%", 100 * SensorValue);
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int Id { get; set; }
+        public Uri ServiceUri { get; set; }
     }
 }

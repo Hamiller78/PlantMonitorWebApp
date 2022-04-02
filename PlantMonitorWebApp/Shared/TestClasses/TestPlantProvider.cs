@@ -1,41 +1,44 @@
-﻿using PlantMonitorWebApp.Shared.Interfaces;
-using PlantMonitorWebApp.Shared.MockClasses;
+﻿using PlantMonitorWebApp.Shared.ViewModels;
 using PlantMonitorWebApp.Shared.Models;
 
-namespace PlantMonitorWebApp.Shared.TestClasses
+namespace PlantMonitorWebApp.Shared.TestData
 {
     public static class TestPlantProvider
     {
-        public static IEnumerable<Plant> GetTestPlantConfigurations()
+
+        public static IEnumerable<PlantView> GetTestPlantViewConfigurations()
         {
-            // IDataSource sensorDataSource = new MockDailyData(new SecondsOfDaySeedSource());
-            // IDataSource sensorDataSource2 = new MockSinePerMinuteData(new SecondsOfDaySeedSource());
-            Sensor sensor1 = new Sensor() { SensorId = 0 };
-            Sensor sensor2 = new Sensor() { SensorId = 1 };
+            var plantViewList = new List<PlantView>
+            {
+                new PlantView("Judith", "Weihnachtsstern", "/Images/CactusPic.png", 1),
+                new PlantView("Mister Nancy", "Palme", "/Images/CactusPic.png", 2),
+                new PlantView("Harry", "Philodendron", "/Images/CactusPic.png", 1)
+            };
+
+            return plantViewList;
+        }
+
+        public static List<Plant>  GetTestPlants()
+        {
+            var sensorList = GetTestSensors();
 
             var plantList = new List<Plant>
             {
-                new Plant(sensor1)
-                {
-                    Name = "Judith",
-                    Description = "Weihnachtsstern",
-                    ImageUrl = "/Images/CactusPic.png"
-                },
-                new Plant(sensor2)
-                {
-                    Name = "Mister Nancy",
-                    Description = "Palme",
-                    ImageUrl = "/Images/CactusPic.png"
-                },
-                new Plant(sensor1)
-                {
-                    Name = "Harry",
-                    Description = "Philodendron",
-                    ImageUrl = "/Images/CactusPic.png"
-                }
+                new Plant() { Name = "Judith", Description = "Weihnachtsstern", ImageUrl = "/Images/CactusPic.png", Sensor = sensorList[0]},
+                new Plant() { Name = "Mister Nancy", Description = "Palme", ImageUrl = "/Images/CactusPic.png", Sensor = sensorList[1]},
+                new Plant() { Name = "Harry", Description = "Philodendron", ImageUrl = "/Images/CactusPic.png", Sensor = sensorList[0]}
             };
 
             return plantList;
+        }
+
+        public static List<Sensor> GetTestSensors()
+        {
+            return new List<Sensor>()
+            {
+                new Sensor() {Id=1, ServiceUri=new Uri("https://mocksensorservice20220122160720.azurewebsites.net/api/GetSensorValue/1?code=vXOZ0KPHaey6xL944dS1sglf4qZMs9H73Wf3joInZE9gJlFKPqJnfg==")},
+                new Sensor() {Id=2, ServiceUri=new Uri("https://mocksensorservice20220122160720.azurewebsites.net/api/GetSensorValue/2?code=vXOZ0KPHaey6xL944dS1sglf4qZMs9H73Wf3joInZE9gJlFKPqJnfg==")}
+            };
         }
     }
 }

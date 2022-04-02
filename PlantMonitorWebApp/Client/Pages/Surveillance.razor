@@ -1,33 +1,39 @@
 ﻿@page "/surveillance"
 @using Microsoft.AspNetCore.SignalR.Client
+@using System.Collections.ObjectModel;
+
+@using PlantMonitorWebApp.Client.DataFetcher;
 @using PlantMonitorWebApp.Shared
 @using PlantMonitorWebApp.Shared.Models
 @using PlantMonitorWebApp.Shared.TestClasses
+@using PlantMonitorWebApp.Shared.ViewModels
 @* implements IAsyncDisposable *@
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
+@inject PlantFetcher plantFetcher
 
 <PageTitle>Plant surveillance</PageTitle>
 
 <h1>Surveillance</h1>
 
-<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced" PageSize="5" AllowPaging="true" AllowSorting="true"
-                Data="@plants" TItem="Plant" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
+<RadzenDataGrid @ref="_dataGrid" AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced" PageSize="5" AllowPaging="true" AllowSorting="true"
+                Data="@_plantViews" TItem="PlantView" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
     <Columns>
-        <RadzenDataGridColumn TItem="Plant" Property="Name" Filterable="true" Title="Name" Frozen="true" Width="140px" TextAlign="TextAlign.Center" />
-        <RadzenDataGridColumn TItem="Plant" Title="Foto" Frozen="true" Sortable="false" Filterable="false" Width="60px">
+        <RadzenDataGridColumn TItem="PlantView" Property="Name" Filterable="true" Title="Name" Frozen="true" Width="140px" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn TItem="PlantView" Title="Foto" Frozen="true" Sortable="false" Filterable="false" Width="60px">
             <Template Context="data">
                 <RadzenImage Path="@data.ImageUrl" style="width: 40px; height: 40px; border-radius: 8px;" />
             </Template>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="Plant" Property="Description" Title="Beschreibung" Frozen="true" Width="200px" />
-        <RadzenDataGridColumn TItem="Plant" Property="Sensor.FormattedSensorValue" Title="Messwert" Frozen="true" Width="7o0px" />
+        <RadzenDataGridColumn TItem="PlantView" Property="Description" Title="Beschreibung" Frozen="true" Width="200px" />
+        <RadzenDataGridColumn TItem="PlantView" Property="FormattedSensorValue" Title="Messwert" Frozen="true" Width="70px" />
     </Columns>
 </RadzenDataGrid>
 
 
 @code {
-    private IEnumerable<Plant>? plants;
+    private RadzenDataGrid<PlantView> _dataGrid;
+    private List<PlantView> _plantViews = new List<PlantView>();
     private HubConnection? _hubConnection;
     private List<string> _messages = new List<string>();
 
@@ -67,20 +73,26 @@
         }
     }
 
-    private void InitPlants()
+    private async void InitPlants()
     {
-        plants = TestPlantProvider.GetTestPlantConfigurations();
+        IEnumerable<Plant> plantList = await plantFetcher.FetchPlantsAsync();
+        foreach (Plant plant in plantList)
+        {
+            PlantView newPlantView = new PlantView(plant);
+            _plantViews.Add(newPlantView);
+        }
+        await _dataGrid.Reload();
     }
 
     private void UpdateSensor(string sensorId, double value)
     {
         // Leaves in theory some room for improvement (same sensor can be updated multiple times)
         // In practice each sensor will only be assigned to one plant
-        foreach (Plant plant in plants)
+        foreach (PlantView plantView in _plantViews)
         {
-            if (plant.Sensor.SensorId == Convert.ToInt32(sensorId))
+            if (plantView.SensorId == Convert.ToInt32(sensorId))
             {
-                plant.Sensor.SensorValue = value;
+                plantView.SensorValue = value;
             }
         }
     }

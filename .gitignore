@@ -351,4 +351,5 @@ MigrationBackup/
 /MockSensorService/Properties/serviceDependencies.MockSensorService20220122160720 - Zip Deploy.json
 /MockSensorService/Properties/ServiceDependencies/MockSensorService20220122160720 - Zip Deploy/storage1.arm.json
 /MockSensorService/Properties/ServiceDependencies/MockSensorService20220122160720 - Zip Deploy/profile.arm.json
-/PlantMonitorWebApp/Server/appsettings.json
+/PlantMonitorWebApp/Server/Properties/ServiceDependencies/PlantMonitorWebAppServer20220208190443 - Web Deploy/profile.arm.json
+/PlantMonitorWebApp/Server/.config
