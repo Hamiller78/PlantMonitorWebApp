@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 
 using PlantMonitorWebApp.Repository.Interfaces;
 using PlantMonitorWebApp.Shared.Models;
@@ -11,17 +10,14 @@ namespace PlantMonitorWebApp.Server.Controllers
     public class PlantController : ControllerBase
     {
         readonly IPlantRepository _plantRepo;
-        readonly IConfiguration _configuration;
 
-        public PlantController(IPlantRepository plantRepo, IConfiguration config)
-            => (_plantRepo, _configuration) = (plantRepo, config);
+        public PlantController(IPlantRepository plantRepo)
+            => _plantRepo = plantRepo;
 
         // GET: Plants/List
         [HttpGet("GetList")]
         public IActionResult List()
         {
-            var connectionStringTest1 = _configuration.GetConnectionString("PlantWebApp");
-
             return Ok(_plantRepo.GetAll());
         }
 

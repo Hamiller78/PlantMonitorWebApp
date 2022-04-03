@@ -1,22 +1,24 @@
 ﻿@page "/configuration"
+@using PlantMonitorWebApp.Client.DataFetcher;
 @using PlantMonitorWebApp.Shared
 @using PlantMonitorWebApp.Shared.Models
 @inject HttpClient Http
+@inject PlantFetcher plantFetcher
+@inject SensorFetcher sensorFetcher
 
 <PageTitle>Sensor configuration</PageTitle>
 
 <h1>Configuration</h1>
 
-<RadzenTabs TabPosition="TabPosition.Top" style="height: 504px; width: 700px; margin: 20px auto;" RenderMode="TabRenderMode.Client">
+<RadzenTabs TabPosition="TabPosition.Top" style="height: 504px; width: 1400px; margin: 20px auto;" RenderMode="TabRenderMode.Client">
     <Tabs>
         <RadzenTabsItem Text="Sensors">
 
             <RadzenDataGrid @ref="_sensorDataGrid" AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced" PageSize="5" AllowPaging="true" AllowSorting="true"
                             Data="@_sensors" TItem="Sensor" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
                 <Columns>
-                    <RadzenDataGridColumn TItem="Sensor" Property="Name" Filterable="true" Title="Name" Frozen="true" Width="140px" TextAlign="TextAlign.Center" />
-                    <RadzenDataGridColumn TItem="Sensor" Property="SensorId" Title="Sensor" Frozen="true" Width="70px" />
-                    <RadzenDataGridColumn TItem="Sensor" Property="ServiceUri" Title="URL" Frozen="true" Width="70px" />
+                    <RadzenDataGridColumn TItem="Sensor" Property="Id" Title="Sensor" Frozen="false" Width="35px" />
+                    <RadzenDataGridColumn TItem="Sensor" Property="ServiceUri" Title="URL" Frozen="false" Width="70px" />
                 </Columns>
             </RadzenDataGrid>
 
@@ -26,16 +28,16 @@
 
 
             <RadzenDataGrid @ref="_plantDataGrid" AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced" PageSize="5" AllowPaging="true" AllowSorting="true"
-                            Data="@_plants" TItem="Plant" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
+                            Data="@_plants" TItem="Plant" ColumnWidth="500px" LogicalFilterOperator="LogicalFilterOperator.Or">
                 <Columns>
-                    <RadzenDataGridColumn TItem="Plant" Property="Name" Filterable="true" Title="Name" Frozen="true" Width="140px" TextAlign="TextAlign.Center" />
-                    <RadzenDataGridColumn TItem="Plant" Title="Foto" Frozen="true" Sortable="false" Filterable="false" Width="60px">
+                    <RadzenDataGridColumn TItem="Plant" Property="Name" Filterable="true" Title="Name" Frozen="false" Width="140px" TextAlign="TextAlign.Center" />
+                    <RadzenDataGridColumn TItem="Plant" Title="Foto" Frozen="false" Sortable="false" Filterable="false" Width="60px">
                         <Template Context="data">
                             <RadzenImage Path="@data.ImageUrl" style="width: 40px; height: 40px; border-radius: 8px;" />
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="Plant" Property="FormattedSensorValue" Title="Messwert" Frozen="true" Width="70px" />
-                    <RadzenDataGridColumn TItem="Plant" Property="Description" Title="Beschreibung" Frozen="true" Width="200px" />
+                    <RadzenDataGridColumn TItem="Plant" Property="Sensor.Id" Title="Sensor" Frozen="false" Width="70px" />
+                    <RadzenDataGridColumn TItem="Plant" Property="Description" Title="Beschreibung" Frozen="false" Width="200px" />
                 </Columns>
             </RadzenDataGrid>
 
@@ -51,5 +53,23 @@
 
     IEnumerable<Sensor> _sensors;
     IEnumerable<Plant> _plants;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await InitSensors();
+        await InitPlants();
+    }
+
+    private async Task InitSensors()
+    {
+        _sensors = await sensorFetcher.FetchSensorsAsync();
+        await _sensorDataGrid.Reload();
+    }
+
+    private async Task InitPlants()
+    {
+        _plants = await plantFetcher.FetchPlantsAsync();
+        await _plantDataGrid.Reload();
+    }
 
 }
