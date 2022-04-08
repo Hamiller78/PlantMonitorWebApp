@@ -17,18 +17,74 @@ namespace PlantMonitorWebApp.Server.Controllers
         [HttpGet("GetList")]
         public IActionResult List()
         {
-            return Ok(_sensorRepo.GetAll());
+            try
+            {
+                return Ok(_sensorRepo.GetAll());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         [HttpGet("Item/{id}")]
         public IActionResult Item(int id)
         {
-            Sensor? sensor = _sensorRepo.GetById(id);
-            if (sensor == null)
+            try
             {
-                return NotFound();
+                Sensor? sensor = _sensorRepo.GetById(id);
+                if (sensor == null)
+                {
+                    return NotFound();
+                }
+                return Ok(sensor);
             }
-            return Ok(sensor);
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPost("Insert/{sensor}")]
+        public IActionResult Insert(Sensor sensor)
+        {
+            try
+            {
+                _sensorRepo.Insert(sensor);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPost("Update/{sensor}")]
+        public IActionResult Update(Sensor sensor)
+        {
+            try
+            {
+                _sensorRepo.Update(sensor);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpDelete("Delete/{id}")]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                _sensorRepo.Delete(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
     }
 }
