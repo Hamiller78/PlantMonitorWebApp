@@ -14,87 +14,78 @@ namespace PlantMonitorWebApp.Server.Controllers
         public PlantController(IPlantRepository plantRepo)
             => _plantRepo = plantRepo;
 
-        // GET: Plants/List
         [HttpGet("GetList")]
         public IActionResult List()
         {
-            return Ok(_plantRepo.GetAll());
+            try
+            {
+                return Ok(_plantRepo.GetAll());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
-        // GET: Plants/Item/5
         [HttpGet("Item/{id}")]
         public IActionResult Item(int id)
         {
-            Plant? plant = _plantRepo.GetById(id);
-            if (plant == null)
+            try
             {
-                return NotFound();
+                Plant? plant = _plantRepo.GetById(id);
+                if (plant == null)
+                {
+                    return NotFound();
+                }
+                return Ok(plant);
             }
-            return Ok(plant);
-        }
-/*
-        // GET: PlantsController/Create
-        public ActionResult Create()
-        {
-            return View();
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
-        // POST: PlantsController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+
+        [HttpPost("Insert/{plant}")]
+        public IActionResult Insert(Plant plant)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _plantRepo.Insert(plant);
+                return Ok();
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
-        // GET: PlantsController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: PlantsController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        [HttpPost("Update/{plant}")]
+        public IActionResult Update(Plant plant)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _plantRepo.Update(plant);
+                return Ok();
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
-        // GET: PlantsController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: PlantsController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        [HttpDelete("Delete/{id}")]
+        public IActionResult Delete(int id)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _plantRepo.Delete(id);
+                return Ok();
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-*/
     }
 }

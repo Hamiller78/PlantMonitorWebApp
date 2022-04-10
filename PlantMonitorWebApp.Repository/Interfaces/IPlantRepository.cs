@@ -6,5 +6,8 @@ namespace PlantMonitorWebApp.Repository.Interfaces
     {
         Plant? GetById(int id);
         IEnumerable<Plant> GetAll();
+        void Insert(Plant plant);
+        void Update(Plant plant);
+        void Delete(int id);
     }
 }
