@@ -2,9 +2,9 @@
 
 namespace PlantMonitorWebApp.Client.Interfaces
 {
-    public interface ISensorFetcher
+    public interface ISensorAccessor
     {
-        Task<IEnumerable<Sensor>> FetchSensorsAsync();
+        Task<IEnumerable<Sensor>> GetSensorsAsync();
         Task<Sensor?> GetSensorByIdAsync(int id);
     }
 }

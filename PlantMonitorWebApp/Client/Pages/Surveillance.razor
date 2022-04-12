@@ -10,7 +10,7 @@
 @* implements IAsyncDisposable *@
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
-@inject PlantFetcher plantFetcher
+@inject PlantAccessor plantFetcher
 
 <PageTitle>Plant surveillance</PageTitle>
 
@@ -75,7 +75,7 @@
 
     private async void InitPlants()
     {
-        IEnumerable<Plant> plantList = await plantFetcher.FetchPlantsAsync();
+        IEnumerable<Plant> plantList = await plantFetcher.GetPlantsAsync();
         foreach (Plant plant in plantList)
         {
             PlantView newPlantView = new PlantView(plant);

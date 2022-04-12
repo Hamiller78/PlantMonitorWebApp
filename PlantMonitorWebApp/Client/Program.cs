@@ -8,7 +8,7 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-builder.Services.AddScoped<PlantFetcher>();
-builder.Services.AddScoped<SensorFetcher>();
+builder.Services.AddScoped<PlantAccessor>();
+builder.Services.AddScoped<SensorAccessor>();
 
 await builder.Build().RunAsync();

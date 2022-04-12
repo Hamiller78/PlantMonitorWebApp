@@ -3,15 +3,15 @@ using System.Net.Http.Json;
 using PlantMonitorWebApp.Client.Interfaces;
 using PlantMonitorWebApp.Shared.Models;
 
-namespace PlantMonitorWebApp.Client.DataFetcher
+namespace PlantMonitorWebApp.Client.DataAccessor
 {
-    public class PlantFetcher : IPlantFetcher
+    public class PlantAccessor : IPlantAccessor
     {
         readonly HttpClient _client;
 
-        public PlantFetcher(HttpClient client) => _client = client;
+        public PlantAccessor(HttpClient client) => _client = client;
 
-        public async Task<IEnumerable<Plant>> FetchPlantsAsync()
+        public async Task<IEnumerable<Plant>> GetPlantsAsync()
         {
             var plants = await _client.GetFromJsonAsync<IEnumerable<Plant>>("Plants/GetList") ?? new List<Plant>();
             return plants;

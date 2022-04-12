@@ -3,8 +3,8 @@
 @using PlantMonitorWebApp.Shared
 @using PlantMonitorWebApp.Shared.Models
 @inject HttpClient Http
-@inject PlantFetcher plantFetcher
-@inject SensorFetcher sensorFetcher
+@inject PlantAccessor plantFetcher
+@inject SensorAccessor sensorFetcher
 
 <PageTitle>Sensor configuration</PageTitle>
 
@@ -88,13 +88,13 @@
 
     private async Task InitSensors()
     {
-        _sensors = await sensorFetcher.FetchSensorsAsync();
+        _sensors = await sensorFetcher.GetSensorsAsync();
         await _sensorDataGrid.Reload();
     }
 
     private async Task InitPlants()
     {
-        _plants = await plantFetcher.FetchPlantsAsync();
+        _plants = await plantFetcher.GetPlantsAsync();
         await _plantDataGrid.Reload();
     }
 
