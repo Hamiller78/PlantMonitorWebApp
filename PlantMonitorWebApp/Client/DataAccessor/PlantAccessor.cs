@@ -19,8 +19,26 @@ namespace PlantMonitorWebApp.Client.DataAccessor
 
         public async Task<Plant?> GetPlantByIdAsync(int id)
         {
-            var plant = await _client.GetFromJsonAsync<Plant>($"Plant/Item/{id.ToString().Trim()}");
+            var plant = await _client.GetFromJsonAsync<Plant>($"Plants/Item/{id.ToString().Trim()}");
             return plant;
+        }
+
+        public async Task<HttpResponseMessage> CreatePlantAsync(Plant plant)
+        {
+            var response = await _client.PostAsJsonAsync($"Plants/Insert", plant);
+            return response;
+        }
+
+        public async Task<HttpResponseMessage> UpdatePlantAsync(Plant plant)
+        {
+            var response = await _client.PostAsJsonAsync($"Plants/Update", plant);
+            return response;
+        }
+
+        public async Task<HttpResponseMessage> DeletePlantAsync(int id)
+        {
+            var response = await _client.DeleteAsync($"Plants/Update/{id.ToString().Trim()}");
+            return response;
         }
     }
 }

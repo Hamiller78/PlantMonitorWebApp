@@ -1,10 +1,11 @@
 ﻿@page "/configuration"
-@using PlantMonitorWebApp.Client.DataFetcher;
+@using PlantMonitorWebApp.Client.DataAccessor;
 @using PlantMonitorWebApp.Shared
 @using PlantMonitorWebApp.Shared.Models
+@using System.Net;
 @inject HttpClient Http
-@inject PlantAccessor plantFetcher
-@inject SensorAccessor sensorFetcher
+@inject PlantAccessor plantAccessor
+@inject SensorAccessor sensorAccessor
 
 <PageTitle>Sensor configuration</PageTitle>
 
@@ -40,8 +41,13 @@
                             </RadzenButton>
                         </EditTemplate>
                     </RadzenDataGridColumn>
-
                     <RadzenDataGridColumn TItem="Sensor" Property="Id" Title="Sensor" Frozen="false" Width="35px" />
+                    <RadzenDataGridColumn TItem="Sensor" Property="Name" Title="Beschreibung" Frozen="false" Width="700px">
+                        <EditTemplate Context="sensor">
+                            <RadzenTextBox @bind-Value="sensor.Name" Style="width:100%; display: block" Name="sensorName" />
+                            <RadzenRequiredValidator Text="Sensorbeschreibung ist erforderlich" Component="sensorName" Popup="true" />
+                        </EditTemplate>
+                    </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="Sensor" Property="ServiceUri" Title="URL" Frozen="false" Width="70px" />
                 </Columns>
             </RadzenDataGrid>
@@ -88,32 +94,37 @@
 
     private async Task InitSensors()
     {
-        _sensors = await sensorFetcher.GetSensorsAsync();
+        _sensors = await sensorAccessor.GetSensorsAsync();
         await _sensorDataGrid.Reload();
     }
 
     private async Task InitPlants()
     {
-        _plants = await plantFetcher.GetPlantsAsync();
+        _plants = await plantAccessor.GetPlantsAsync();
         await _plantDataGrid.Reload();
     }
 
     async Task EditSensorRow(Sensor sensor)
     {
         await _sensorDataGrid.EditRow(sensor);
-    }   
+    }
 
-   async Task SaveSensorRow(Sensor sensor)
+    async Task SaveSensorRow(Sensor sensor)
     {
         if (sensor == _sensorToInsert)
         {
             _sensorToInsert = null;
         }
 
+        var result = await sensorAccessor.UpdateSensorAsync(sensor);
+        if (result.StatusCode != HttpStatusCode.OK)
+        {
+            // error
+        }
         await _sensorDataGrid.UpdateRow(sensor);
     }
 
-   void CancelSensorEdit(Sensor sensor)
+    void CancelSensorEdit(Sensor sensor)
     {
         if (sensor == _sensorToInsert)
         {
@@ -121,14 +132,6 @@
         }
 
         _sensorDataGrid.CancelEditRow(sensor);
-
-        // For production
-        //var orderEntry = dbContext.Entry(order);
-        //if (orderEntry.State == EntityState.Modified)
-        //{
-        //    orderEntry.CurrentValues.SetValues(orderEntry.OriginalValues);
-        //    orderEntry.State = EntityState.Unchanged;
-        //}
     }
 
     async Task DeleteSensorRow(Sensor sensor)
@@ -140,14 +143,11 @@
 
         if (_sensors.Contains(sensor))
         {
-  //          dbContext.Remove<Order>(order);
-
-            // For demo purposes only
-  //          orders.Remove(order);
-
-            // For production
-            //dbContext.SaveChanges();
-
+            var result = await sensorAccessor.DeleteSensorAsync(sensor.Id);
+            if (result.StatusCode != HttpStatusCode.OK)
+            {
+                // error
+            }
             await _sensorDataGrid.Reload();
         }
         else

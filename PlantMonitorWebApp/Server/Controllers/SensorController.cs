@@ -45,8 +45,8 @@ namespace PlantMonitorWebApp.Server.Controllers
             }
         }
 
-        [HttpPost("Insert/{sensor}")]
-        public IActionResult Insert(Sensor sensor)
+        [HttpPost("Insert")]
+        public IActionResult Insert([FromBody]Sensor sensor)
         {
             try
             {
@@ -59,8 +59,8 @@ namespace PlantMonitorWebApp.Server.Controllers
             }
         }
 
-        [HttpPost("Update/{sensor}")]
-        public IActionResult Update(Sensor sensor)
+        [HttpPost("Update")]
+        public IActionResult Update([FromBody]Sensor sensor)
         {
             try
             {
