@@ -7,6 +7,7 @@
 @inject HttpClient Http
 @inject PlantAccessor plantAccessor
 @inject SensorAccessor sensorAccessor
+@inject NotificationService notificationService
 
 <PageTitle>Sensor configuration</PageTitle>
 
@@ -93,6 +94,7 @@
     {
         await InitSensors();
         await InitPlants();
+        notificationService.Notify(NotificationSeverity.Info, "Initialized", "...", 10000);
     }
 
     async Task EditSensorRow(SensorViewModel sensor)
@@ -120,10 +122,15 @@
             result = await sensorAccessor.UpdateSensorAsync(sensor.ToSensor());
         }
 
-        if (result.StatusCode != HttpStatusCode.OK)
+        if (result.StatusCode == HttpStatusCode.OK)
         {
-            // TODO: Output error notification
+            notificationService.Notify(NotificationSeverity.Success, "Sensor saved");
         }
+        else
+        {
+            notificationService.Notify(NotificationSeverity.Error, "Error while saving.", result.StatusCode.ToString(), 10000);
+        }
+
         await _sensorDataGrid.UpdateRow(sensor);
     }
 

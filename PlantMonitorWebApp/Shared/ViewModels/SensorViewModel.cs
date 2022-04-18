@@ -23,7 +23,7 @@ namespace PlantMonitorWebApp.Shared.ViewModels
 
         public Sensor ToSensor()
         {
-            return new Sensor() { Name = Name, ServiceUri = new Uri(UriString ?? string.Empty) };
+            return new Sensor() { Id = Id, Name = Name, ServiceUri = new Uri(UriString ?? string.Empty) };
         }
     }
 }
