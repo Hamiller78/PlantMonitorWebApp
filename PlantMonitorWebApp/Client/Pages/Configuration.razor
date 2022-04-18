@@ -15,11 +15,11 @@
 <RadzenTabs TabPosition="TabPosition.Top" style="height: 504px; width: 1400px; margin: 20px auto;" RenderMode="TabRenderMode.Client">
     <Tabs>
         <RadzenTabsItem Text="Sensors">
-
+            <RadzenButton Icon="add_circle_outline" style="margin-bottom: 10px" Text="Add New Sensor" Click="@InsertSensor" Disabled=@(_sensorToInsert != null) />
             <RadzenDataGrid @ref="_sensorDataGrid" AllowFiltering="true" AllowColumnResize="false" FilterMode="FilterMode.Advanced" PageSize="5" AllowPaging="true" AllowSorting="true"
-                            Data="@_sensors" TItem="SensorView" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
+                            Data="@_sensors" TItem="SensorViewModel" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
                 <Columns>
-                    <RadzenDataGridColumn TItem="SensorView" Context="sensor" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
+                    <RadzenDataGridColumn TItem="SensorViewModel" Context="sensor" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
                         <Template Context="sensor">
                             <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Class="m-1" Click="@(args => EditSensorRow(sensor))" @onclick:stopPropagation="true">
                             </RadzenButton>
@@ -31,7 +31,7 @@
                             </RadzenButton>
                         </EditTemplate>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="SensorView" Context="sensor" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="30px">
+                    <RadzenDataGridColumn TItem="SensorViewModel" Context="sensor" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="30px">
                         <Template Context="sensor">
                             <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small" Class="m-1" Click="@(args => DeleteSensorRow(sensor))" @onclick:stopPropagation="true">
                             </RadzenButton>
@@ -41,13 +41,13 @@
                             </RadzenButton>
                         </EditTemplate>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="SensorView" Property="Name" Title="Beschreibung" Frozen="false" Width="300px">
+                    <RadzenDataGridColumn TItem="SensorViewModel" Property="Name" Title="Beschreibung" Frozen="false" Width="300px">
                         <EditTemplate Context="sensor">
                             <RadzenTextBox @bind-Value="sensor.Name" Style="width:100%; display: block" Name="sensorName" />
                             <RadzenRequiredValidator Text="Sensor description is required" Component="sensorName" Popup="true" />
                         </EditTemplate>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="SensorView" Property="UriString" Title="URL" Frozen="false" Width="300px" >
+                    <RadzenDataGridColumn TItem="SensorViewModel" Property="UriString" Title="URL" Frozen="false" Width="300px">
                         <EditTemplate Context="sensor">
                             <RadzenTextBox @bind-Value="sensor.UriString" Style="width:100%; display: block" Name="sensorServiceUri" />
                             <RadzenRequiredValidator Text="Sensor service URI is required" Component="sensorServiceUri" Popup="true" />
@@ -81,58 +81,53 @@
 
 
 @code {
-    RadzenDataGrid<SensorView> _sensorDataGrid;
+    RadzenDataGrid<SensorViewModel> _sensorDataGrid;
     RadzenDataGrid<Plant> _plantDataGrid;
 
-    List<SensorView> _sensors;
+    List<SensorViewModel> _sensors;
     IEnumerable<Plant> _plants;
 
-    SensorView? _sensorToInsert;
+    SensorViewModel? _sensorToInsert;
 
     protected override async Task OnInitializedAsync()
     {
-        InitSensors();
+        await InitSensors();
         await InitPlants();
     }
 
-    private async void InitSensors()
-    {
-        var sensors = await sensorAccessor.GetSensorsAsync();
-        _sensors = new List<SensorView>();
-        foreach (Sensor sensor in sensors)
-        {
-            _sensors.Add(new SensorView(sensor));
-        }
-        await _sensorDataGrid.Reload();
-    }
-
-    private async Task InitPlants()
-    {
-        _plants = await plantAccessor.GetPlantsAsync();
-        await _plantDataGrid.Reload();
-    }
-
-    async Task EditSensorRow(SensorView sensor)
+    async Task EditSensorRow(SensorViewModel sensor)
     {
         await _sensorDataGrid.EditRow(sensor);
     }
 
-    async Task SaveSensorRow(SensorView sensor)
+    async Task InsertSensor()
     {
+        _sensorToInsert = new SensorViewModel();
+        await _sensorDataGrid.InsertRow(_sensorToInsert);
+    }
+
+    async Task SaveSensorRow(SensorViewModel sensor)
+    {
+        HttpResponseMessage result;
         if (sensor == _sensorToInsert)
         {
+            result = await sensorAccessor.CreateSensorAsync(sensor.ToSensor());
+            await InitSensors();
             _sensorToInsert = null;
         }
+        else
+        {
+            result = await sensorAccessor.UpdateSensorAsync(sensor.ToSensor());
+        }
 
-        var result = await sensorAccessor.UpdateSensorAsync(sensor.ToSensor());
         if (result.StatusCode != HttpStatusCode.OK)
         {
-            // error
+            // TODO: Output error notification
         }
         await _sensorDataGrid.UpdateRow(sensor);
     }
 
-    void CancelSensorEdit(SensorView sensor)
+    void CancelSensorEdit(SensorViewModel sensor)
     {
         if (sensor == _sensorToInsert)
         {
@@ -142,7 +137,7 @@
         _sensorDataGrid.CancelEditRow(sensor);
     }
 
-    async Task DeleteSensorRow(SensorView sensor)
+    async Task DeleteSensorRow(SensorViewModel sensor)
     {
         if (sensor == _sensorToInsert)
         {
@@ -156,7 +151,7 @@
             {
                 // error
             }
-            await _sensorDataGrid.Reload();
+            await InitSensors();
         }
         else
         {
@@ -164,4 +159,20 @@
         }
     }
 
+    async Task InitSensors()
+    {
+        var sensors = await sensorAccessor.GetSensorsAsync();
+        _sensors = new List<SensorViewModel>();
+        foreach (Sensor sensor in sensors)
+        {
+            _sensors.Add(new SensorViewModel(sensor));
+        }
+        await _sensorDataGrid.Reload();
+    }
+
+    async Task InitPlants()
+    {
+        _plants = await plantAccessor.GetPlantsAsync();
+        await _plantDataGrid.Reload();
+    }
 }

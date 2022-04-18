@@ -2,13 +2,19 @@
 
 namespace PlantMonitorWebApp.Shared.ViewModels
 {
-    public class SensorView
+    public class SensorViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string UriString { get; set; }
 
-        public SensorView(Sensor sensor)
+        public SensorViewModel()
+        {
+            Name = string.Empty;
+            UriString = string.Empty;
+        }
+
+        public SensorViewModel(Sensor sensor)
         {
             Id = sensor.Id;
             Name = sensor.Name;

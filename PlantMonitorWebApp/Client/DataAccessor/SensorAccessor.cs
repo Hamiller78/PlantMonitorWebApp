@@ -36,7 +36,7 @@ namespace PlantMonitorWebApp.Client.DataAccessor
 
         public async Task<HttpResponseMessage> DeleteSensorAsync(int id)
         {
-            var response = await _client.DeleteAsync($"Sensors/Update/{id.ToString().Trim()}");
+            var response = await _client.DeleteAsync($"Sensors/Delete/{id.ToString().Trim()}");
             return response;
         }
     }

@@ -11,9 +11,8 @@ namespace PlantMonitorWebApp.Shared.Models
 {
     public class Sensor
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public Uri? ServiceUri { get; set; }
     }
 }
