@@ -68,6 +68,11 @@ namespace PlantMonitorWebApp.Repository.Classes
             try
             {
                 Sensor sensor = _context.Sensors.Where(s => s.Id == id).Single();
+                List<Plant> plants = _context.Plants.Where(p => p.Sensor == sensor).ToList();
+                foreach (Plant plant in plants)
+                {
+                    plant.Sensor = null;
+                }
                 _context.Sensors.Remove(sensor);
                 _context.SaveChanges();
             }
