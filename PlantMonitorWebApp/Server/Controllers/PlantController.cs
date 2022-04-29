@@ -46,8 +46,8 @@ namespace PlantMonitorWebApp.Server.Controllers
         }
 
 
-        [HttpPost("Insert/{plant}")]
-        public IActionResult Insert(Plant plant)
+        [HttpPost("Insert")]
+        public IActionResult Insert([FromBody]Plant plant)
         {
             try
             {
@@ -60,8 +60,8 @@ namespace PlantMonitorWebApp.Server.Controllers
             }
         }
 
-        [HttpPost("Update/{plant}")]
-        public IActionResult Update(Plant plant)
+        [HttpPost("Update")]
+        public IActionResult Update([FromBody]Plant plant)
         {
             try
             {
