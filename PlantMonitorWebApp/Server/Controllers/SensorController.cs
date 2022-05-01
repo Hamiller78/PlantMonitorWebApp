@@ -6,20 +6,20 @@ using PlantMonitorWebApp.Shared.Models;
 namespace PlantMonitorWebApp.Server.Controllers
 {
     [ApiController]
-    [Route("/Plants")]
-    public class PlantController : ControllerBase
+    [Route("/Sensors")]
+    public class SensorController : ControllerBase
     {
-        readonly IPlantRepository _plantRepo;
+        readonly ISensorRepository _sensorRepo;
 
-        public PlantController(IPlantRepository plantRepo)
-            => _plantRepo = plantRepo;
+        public SensorController(ISensorRepository sensorRepo)
+            => _sensorRepo = sensorRepo;
 
         [HttpGet("GetList")]
         public IActionResult List()
         {
             try
             {
-                return Ok(_plantRepo.GetAll());
+                return Ok(_sensorRepo.GetAll());
             }
             catch (Exception ex)
             {
@@ -32,12 +32,12 @@ namespace PlantMonitorWebApp.Server.Controllers
         {
             try
             {
-                Plant? plant = _plantRepo.GetById(id);
-                if (plant == null)
+                Sensor? sensor = _sensorRepo.GetById(id);
+                if (sensor == null)
                 {
                     return NotFound();
                 }
-                return Ok(plant);
+                return Ok(sensor);
             }
             catch (Exception ex)
             {
@@ -45,13 +45,12 @@ namespace PlantMonitorWebApp.Server.Controllers
             }
         }
 
-
         [HttpPost("Insert")]
-        public IActionResult Insert([FromBody]Plant plant)
+        public IActionResult Insert([FromBody]Sensor sensor)
         {
             try
             {
-                _plantRepo.Insert(plant);
+                _sensorRepo.Insert(sensor);
                 return Ok();
             }
             catch (Exception ex)
@@ -61,11 +60,11 @@ namespace PlantMonitorWebApp.Server.Controllers
         }
 
         [HttpPost("Update")]
-        public IActionResult Update([FromBody]Plant plant)
+        public IActionResult Update([FromBody]Sensor sensor)
         {
             try
             {
-                _plantRepo.Update(plant);
+                _sensorRepo.Update(sensor);
                 return Ok();
             }
             catch (Exception ex)
@@ -79,7 +78,7 @@ namespace PlantMonitorWebApp.Server.Controllers
         {
             try
             {
-                _plantRepo.Delete(id);
+                _sensorRepo.Delete(id);
                 return Ok();
             }
             catch (Exception ex)

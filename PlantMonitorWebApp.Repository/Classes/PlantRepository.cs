@@ -20,5 +20,49 @@ namespace PlantMonitorWebApp.Repository.Classes
         {
             return _context.Plants.Include(p => p.Sensor).Where(p => p.Id == id).FirstOrDefault();
         }
+
+        public void Insert(Plant plant)
+        {
+            try
+            {
+                _context.Plants.Add(plant);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new RepositoryException($"Error inserting Plant with name {plant.Name}", ex);
+            }
+        }
+
+        public void Update(Plant plant)
+        {
+            try
+            {
+                Plant dbPlant = _context.Plants.Where(s => s.Id == plant.Id).Single();
+                dbPlant.Name = plant.Name;
+                dbPlant.Description = plant.Description;
+                dbPlant.Sensor = plant.Sensor;
+                dbPlant.ImageUrl = plant.ImageUrl;
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new RepositoryException($"Error updating Plant with id {plant.Id}", ex);
+            }
+        }
+
+        public void Delete(int id)
+        {
+            try
+            {
+                Plant plant = _context.Plants.Where(s => s.Id == id).Single();
+                _context.Plants.Remove(plant);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new RepositoryException($"Error deleting Plant with id {id}", ex);
+            }
+        }
     }
 }

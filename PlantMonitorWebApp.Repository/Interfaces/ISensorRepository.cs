@@ -6,5 +6,8 @@ namespace PlantMonitorWebApp.Repository.Interfaces
     {
         Sensor? GetById(int id);
         IEnumerable<Sensor> GetAll();
+        void Insert(Sensor sensor);
+        void Update(Sensor sensor);
+        void Delete(int id);
     }
 }

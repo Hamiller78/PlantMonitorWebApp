@@ -2,9 +2,9 @@
 
 namespace PlantMonitorWebApp.Client.Interfaces
 {
-    public interface IPlantFetcher
+    public interface IPlantAccessor
     {
-        Task<IEnumerable<Plant>> FetchPlantsAsync();
+        Task<IEnumerable<Plant>> GetPlantsAsync();
         Task<Plant?> GetPlantByIdAsync(int id);
     }
 }

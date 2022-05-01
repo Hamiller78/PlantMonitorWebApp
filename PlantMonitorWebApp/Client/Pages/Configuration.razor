@@ -1,13 +1,294 @@
 ﻿@page "/configuration"
+@using PlantMonitorWebApp.Client.DataAccessor;
 @using PlantMonitorWebApp.Shared
+@using PlantMonitorWebApp.Shared.Models
+@using PlantMonitorWebApp.Shared.ViewModels;
+@using System.Net;
 @inject HttpClient Http
+@inject PlantAccessor plantAccessor
+@inject SensorAccessor sensorAccessor
+@inject NotificationService notificationService
 
 <PageTitle>Sensor configuration</PageTitle>
 
 <h1>Configuration</h1>
 
-<p>Here we should allow addition and subtraction of surveilled sensors</p>
+<RadzenTabs TabPosition="TabPosition.Top" style="height: 504px; width: 1400px; margin: 20px auto;" RenderMode="TabRenderMode.Client">
+    <Tabs>
+        <RadzenTabsItem Text="Plants">
+            <RadzenButton Icon="add_circle_outline" style="margin-bottom: 10px" Text="Add New Plant" Click="@InsertPlant" Disabled=@(_plantToInsert != null) />
+            <RadzenDataGrid @ref="_plantDataGrid" AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced" PageSize="5" AllowPaging="true" AllowSorting="true"
+                            Data="@_plantViewModels" TItem="PlantViewModel" ColumnWidth="500px" LogicalFilterOperator="LogicalFilterOperator.Or">
+                <Columns>
+                    <RadzenDataGridColumn TItem="PlantViewModel" Context="sensor" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
+                        <Template Context="plant">
+                            <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Class="m-1" Click="@(args => EditPlantRow(plant))" @onclick:stopPropagation="true">
+                            </RadzenButton>
+                        </Template>
+                        <EditTemplate Context="plant">
+                            <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Primary" Class="m-1" Click="@((args) => SavePlantRow(plant))">
+                            </RadzenButton>
+                            <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Class="m-1" Click="@((args) => CancelPlantEdit(plant))">
+                            </RadzenButton>
+                        </EditTemplate>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="PlantViewModel" Context="plant" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="30px">
+                        <Template Context="plant">
+                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small" Class="m-1" Click="@(args => DeletePlantRow(plant))" @onclick:stopPropagation="true">
+                            </RadzenButton>
+                        </Template>
+                        <EditTemplate Context="plant">
+                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small" Class="m-1" Click="@(args => DeletePlantRow(plant))">
+                            </RadzenButton>
+                        </EditTemplate>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="PlantViewModel" Property="Name" Filterable="true" Title="Name" Frozen="false" Width="140px" TextAlign="TextAlign.Center">
+                        <EditTemplate Context="plant">
+                            <RadzenTextBox @bind-Value="plant.Name" Style="width:100%; display: block" Name="plantName" />
+                            <RadzenRequiredValidator Text="Plant description is required" Component="plantName" Popup="true" />
+                        </EditTemplate>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="PlantViewModel" Title="Foto" Frozen="false" Sortable="false" Filterable="false" Width="60px">
+                        <Template Context="data">
+                            <RadzenImage Path="@data.ImageUrl" style="width: 40px; height: 40px; border-radius: 8px;" />
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="PlantViewModel" Property="SensorName" Title="Sensor" Frozen="false" Width="70px">
+                        <EditTemplate Context="plant">
+                            <RadzenDropDown AllowClear="true" @bind-Value="plant.SensorId" Data="@_sensorViewModels" TextProperty="Name" ValueProperty="Id" Style="width:100%; display: block;" />
+                        </EditTemplate>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="PlantViewModel" Property="Description" Title="Beschreibung" Frozen="false" Width="200px">
+                        <EditTemplate Context="plant">
+                            <RadzenTextBox @bind-Value="plant.Description" Style="width:100%; display: block" Name="plantDescription" />
+                            <RadzenRequiredValidator Text="Plant description is required" Component="plantDescription" Popup="true" />
+                        </EditTemplate>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="Sensors">
+            <RadzenButton Icon="add_circle_outline" style="margin-bottom: 10px" Text="Add New Sensor" Click="@InsertSensor" Disabled=@(_sensorToInsert != null) />
+            <RadzenDataGrid @ref="_sensorDataGrid" AllowFiltering="true" AllowColumnResize="false" FilterMode="FilterMode.Advanced" PageSize="5" AllowPaging="true" AllowSorting="true"
+                            Data="@_sensorViewModels" TItem="SensorViewModel" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
+                <Columns>
+                    <RadzenDataGridColumn TItem="SensorViewModel" Context="sensor" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
+                        <Template Context="sensor">
+                            <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Class="m-1" Click="@(args => EditSensorRow(sensor))" @onclick:stopPropagation="true">
+                            </RadzenButton>
+                        </Template>
+                        <EditTemplate Context="sensor">
+                            <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Primary" Class="m-1" Click="@((args) => SaveSensorRow(sensor))">
+                            </RadzenButton>
+                            <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Class="m-1" Click="@((args) => CancelSensorEdit(sensor))">
+                            </RadzenButton>
+                        </EditTemplate>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="SensorViewModel" Context="sensor" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="30px">
+                        <Template Context="sensor">
+                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small" Class="m-1" Click="@(args => DeleteSensorRow(sensor))" @onclick:stopPropagation="true">
+                            </RadzenButton>
+                        </Template>
+                        <EditTemplate Context="sensor">
+                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small" Class="m-1" Click="@(args => DeleteSensorRow(sensor))">
+                            </RadzenButton>
+                        </EditTemplate>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="SensorViewModel" Property="Name" Title="Beschreibung" Frozen="false" Width="300px">
+                        <EditTemplate Context="sensor">
+                            <RadzenTextBox @bind-Value="sensor.Name" Style="width:100%; display: block" Name="sensorName" />
+                            <RadzenRequiredValidator Text="Sensor description is required" Component="sensorName" Popup="true" />
+                        </EditTemplate>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="SensorViewModel" Property="UriString" Title="URL" Frozen="false" Width="300px">
+                        <EditTemplate Context="sensor">
+                            <RadzenTextBox @bind-Value="sensor.UriString" Style="width:100%; display: block" Name="sensorServiceUri" />
+                            <RadzenRequiredValidator Text="Sensor service URI is required" Component="sensorServiceUri" Popup="true" />
+                        </EditTemplate>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        </RadzenTabsItem>
+    </Tabs>
+</RadzenTabs>
+
 
 @code {
+    RadzenDataGrid<SensorViewModel> _sensorDataGrid;
+    RadzenDataGrid<PlantViewModel> _plantDataGrid;
 
+    IEnumerable<Sensor> _sensors;
+    List<SensorViewModel> _sensorViewModels;
+    List<PlantViewModel> _plantViewModels;
+
+    PlantViewModel? _plantToInsert;
+    SensorViewModel? _sensorToInsert;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await InitSensors();
+        await InitPlants();
+    }
+
+    async Task EditPlantRow(PlantViewModel plant)
+    {
+        await _plantDataGrid.EditRow(plant);
+    }
+
+    async Task InsertPlant()
+    {
+        _plantToInsert = new PlantViewModel();
+        await _plantDataGrid.InsertRow(_plantToInsert);
+    }
+
+    async Task SavePlantRow(PlantViewModel plant)
+    {
+        HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+        if (plant == _plantToInsert)
+        {
+            result = await plantAccessor.CreatePlantAsync(plant.ToPlant(_sensors));
+            _plantToInsert = null;
+        }
+        else
+        {
+            result = await plantAccessor.UpdatePlantAsync(plant.ToPlant(_sensors));
+        }
+        await InitPlants();
+
+        if (result.StatusCode == HttpStatusCode.OK)
+        {
+            notificationService.Notify(NotificationSeverity.Success, "Plant saved");
+        }
+        else
+        {
+            notificationService.Notify(NotificationSeverity.Error, "Error while saving plant.", result.StatusCode.ToString(), 10000);
+        }
+
+        await _plantDataGrid.UpdateRow(plant);
+    }
+
+    void CancelPlantEdit(PlantViewModel plant)
+    {
+        if (plant == _plantToInsert)
+        {
+            _plantToInsert = null;
+        }
+
+        _plantDataGrid.CancelEditRow(plant);
+    }
+
+    async Task DeletePlantRow(PlantViewModel plant)
+    {
+        if (plant == _plantToInsert)
+        {
+            _plantToInsert = null;
+        }
+
+        if (_plantViewModels.Contains(plant))
+        {
+            var result = await plantAccessor.DeletePlantAsync(plant.Id);
+            if (result.StatusCode != HttpStatusCode.OK)
+            {
+                notificationService.Notify(NotificationSeverity.Error, "Error while deleting plant.", result.StatusCode.ToString(), 10000);
+            }
+            await InitPlants();
+        }
+        else
+        {
+            _plantDataGrid.CancelEditRow(plant);
+        }
+    }
+
+    async Task EditSensorRow(SensorViewModel sensor)
+    {
+        await _sensorDataGrid.EditRow(sensor);
+    }
+
+    async Task InsertSensor()
+    {
+        _sensorToInsert = new SensorViewModel();
+        await _sensorDataGrid.InsertRow(_sensorToInsert);
+    }
+
+    async Task SaveSensorRow(SensorViewModel sensor)
+    {
+        HttpResponseMessage result;
+        if (sensor == _sensorToInsert)
+        {
+            result = await sensorAccessor.CreateSensorAsync(sensor.ToSensor());
+            await InitSensors();
+            _sensorToInsert = null;
+        }
+        else
+        {
+            result = await sensorAccessor.UpdateSensorAsync(sensor.ToSensor());
+        }
+
+        if (result.StatusCode == HttpStatusCode.OK)
+        {
+            notificationService.Notify(NotificationSeverity.Success, "Sensor saved");
+        }
+        else
+        {
+            notificationService.Notify(NotificationSeverity.Error, "Error while saving sensor.", result.StatusCode.ToString(), 10000);
+        }
+
+        await _sensorDataGrid.UpdateRow(sensor);
+    }
+
+    void CancelSensorEdit(SensorViewModel sensor)
+    {
+        if (sensor == _sensorToInsert)
+        {
+            _sensorToInsert = null;
+        }
+
+        _sensorDataGrid.CancelEditRow(sensor);
+    }
+
+    async Task DeleteSensorRow(SensorViewModel sensor)
+    {
+        if (sensor == _sensorToInsert)
+        {
+            _sensorToInsert = null;
+        }
+
+        if (_sensorViewModels.Contains(sensor))
+        {
+            var result = await sensorAccessor.DeleteSensorAsync(sensor.Id);
+            if (result.StatusCode != HttpStatusCode.OK)
+            {
+                notificationService.Notify(NotificationSeverity.Error, "Error while deleting sensor.", result.StatusCode.ToString(), 10000);
+            }
+            await InitSensors();
+        }
+        else
+        {
+            _sensorDataGrid.CancelEditRow(sensor);
+        }
+    }
+
+    async Task InitSensors()
+    {
+        _sensors = await sensorAccessor.GetSensorsAsync();
+        _sensorViewModels = new List<SensorViewModel>();
+        foreach (Sensor sensor in _sensors)
+        {
+            _sensorViewModels.Add(new SensorViewModel(sensor));
+        }
+        await _sensorDataGrid.Reload();
+    }
+
+    async Task InitPlants()
+    {
+        var plants = await plantAccessor.GetPlantsAsync();
+        _plantViewModels = new List<PlantViewModel>();
+        foreach (Plant plant in plants)
+        {
+            _plantViewModels.Add(new PlantViewModel(plant));
+        }
+
+
+        await _plantDataGrid.Reload();
+    }
 }
