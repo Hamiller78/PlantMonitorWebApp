@@ -17,23 +17,23 @@
 <h1>Surveillance</h1>
 
 <RadzenDataGrid @ref="_dataGrid" AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced" PageSize="5" AllowPaging="true" AllowSorting="true"
-                Data="@_plantViews" TItem="PlantView" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
+                Data="@_PlantViewModels" TItem="PlantViewModel" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
     <Columns>
-        <RadzenDataGridColumn TItem="PlantView" Property="Name" Filterable="true" Title="Name" Frozen="true" Width="140px" TextAlign="TextAlign.Center" />
-        <RadzenDataGridColumn TItem="PlantView" Title="Foto" Frozen="true" Sortable="false" Filterable="false" Width="60px">
+        <RadzenDataGridColumn TItem="PlantViewModel" Property="Name" Filterable="true" Title="Name" Frozen="true" Width="140px" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn TItem="PlantViewModel" Title="Foto" Frozen="true" Sortable="false" Filterable="false" Width="60px">
             <Template Context="data">
                 <RadzenImage Path="@data.ImageUrl" style="width: 40px; height: 40px; border-radius: 8px;" />
             </Template>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="PlantView" Property="FormattedSensorValue" Title="Messwert" Frozen="true" Width="70px" />
-        <RadzenDataGridColumn TItem="PlantView" Property="Description" Title="Beschreibung" Frozen="true" Width="200px" />
+        <RadzenDataGridColumn TItem="PlantViewModel" Property="FormattedSensorValue" Title="Messwert" Frozen="true" Width="70px" />
+        <RadzenDataGridColumn TItem="PlantViewModel" Property="Description" Title="Beschreibung" Frozen="true" Width="200px" />
     </Columns>
 </RadzenDataGrid>
 
 
 @code {
-    private RadzenDataGrid<PlantView> _dataGrid;
-    private List<PlantView> _plantViews = new List<PlantView>();
+    private RadzenDataGrid<PlantViewModel> _dataGrid;
+    private List<PlantViewModel> _PlantViewModels = new List<PlantViewModel>();
     private HubConnection? _hubConnection;
     private List<string> _messages = new List<string>();
 
@@ -78,8 +78,8 @@
         IEnumerable<Plant> plantList = await plantFetcher.GetPlantsAsync();
         foreach (Plant plant in plantList)
         {
-            PlantView newPlantView = new PlantView(plant);
-            _plantViews.Add(newPlantView);
+            PlantViewModel newPlantViewModel = new PlantViewModel(plant);
+            _PlantViewModels.Add(newPlantViewModel);
         }
         await _dataGrid.Reload();
     }
@@ -88,11 +88,11 @@
     {
         // Leaves in theory some room for improvement (same sensor can be updated multiple times)
         // In practice each sensor will only be assigned to one plant
-        foreach (PlantView plantView in _plantViews)
+        foreach (PlantViewModel PlantViewModel in _PlantViewModels)
         {
-            if (plantView.SensorId == Convert.ToInt32(sensorId))
+            if (PlantViewModel.SensorId == Convert.ToInt32(sensorId))
             {
-                plantView.SensorValue = value;
+                PlantViewModel.SensorValue = value;
             }
         }
     }

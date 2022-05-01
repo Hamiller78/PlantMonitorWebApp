@@ -6,13 +6,13 @@ namespace PlantMonitorWebApp.Shared.TestData
     public static class TestPlantProvider
     {
 
-        public static IEnumerable<PlantView> GetTestPlantViewConfigurations()
+        public static IEnumerable<PlantViewModel> GetTestPlantViewConfigurations()
         {
-            var plantViewList = new List<PlantView>
+            var plantViewList = new List<PlantViewModel>
             {
-                new PlantView("Judith", "Weihnachtsstern", "/Images/CactusPic.png", 1),
-                new PlantView("Mister Nancy", "Palme", "/Images/CactusPic.png", 2),
-                new PlantView("Harry", "Philodendron", "/Images/CactusPic.png", 1)
+                new PlantViewModel("Judith", "Weihnachtsstern", "/Images/CactusPic.png", 1),
+                new PlantViewModel("Mister Nancy", "Palme", "/Images/CactusPic.png", 2),
+                new PlantViewModel("Harry", "Philodendron", "/Images/CactusPic.png", 1)
             };
 
             return plantViewList;
