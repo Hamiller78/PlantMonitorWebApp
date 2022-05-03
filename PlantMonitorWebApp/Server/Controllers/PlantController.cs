@@ -51,7 +51,7 @@ namespace PlantMonitorWebApp.Server.Controllers
         {
             try
             {
-                _plantRepo.Insert(plant);
+                _plantRepo.Insert(plant);  // Currently we use the model class directly instead of a data transfer object. That means that a referenced sensor object may also be created from the JSON.
                 return Ok();
             }
             catch (Exception ex)
