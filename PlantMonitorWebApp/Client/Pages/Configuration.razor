@@ -60,7 +60,7 @@
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="PlantViewModel" Property="AlertLevel" Filterable="true" Title="Alert Level" Frozen="false" Width="36px" TextAlign="TextAlign.Center">
                         <EditTemplate Context="plant">
-                            <RadzenSlider @bind-Value="plant.AlertLevel" Min="0" Max="100" Style="width:100%; display: block" Name="plantAlertLevel" />
+                            <RadzenNumeric @bind-Value="plant.AlertLevel" Min="0" Max="100" Style="width:100%; display: block" Name="plantAlertLevel" />
                             <RadzenRequiredValidator Text="Plant alert level is required" Component="plantAlertLevel" Popup="true" />
                         </EditTemplate>
                     </RadzenDataGridColumn>
