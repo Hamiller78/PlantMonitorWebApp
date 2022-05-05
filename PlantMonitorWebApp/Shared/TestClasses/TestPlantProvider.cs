@@ -10,9 +10,27 @@ namespace PlantMonitorWebApp.Shared.TestData
         {
             var plantViewList = new List<PlantViewModel>
             {
-                new PlantViewModel("Judith", "Weihnachtsstern", "/Images/CactusPic.png", 1),
-                new PlantViewModel("Mister Nancy", "Palme", "/Images/CactusPic.png", 2),
-                new PlantViewModel("Harry", "Philodendron", "/Images/CactusPic.png", 1)
+                new PlantViewModel()
+                {
+                    Name = "Judith",
+                    Description = "Weihnachtsstern",
+                    ImageUrl = "/Images/CactusPic.png",
+                    SensorId = 1
+                },
+                new PlantViewModel()
+                {
+                    Name = "Mister Nancy",
+                    Description = "Palme",
+                    ImageUrl = "/Images/CactusPic.png",
+                    SensorId = 2
+                },
+                new PlantViewModel()
+                {
+                    Name = "Harry",
+                    Description = "Philodendron",
+                    ImageUrl = "/Images/CactusPic.png",
+                    SensorId = 1
+                }
             };
 
             return plantViewList;

@@ -12,6 +12,8 @@ public class PlantViewModel
     public string SensorName { get; set; } = string.Empty;
     public string FormattedSensorValue => string.Format("{0,7:##0.000}%", 100 * SensorValue);
     public double SensorValue { get; set; }  // Make this private?
+    public int AlertLevel { get; set; } = 0;
+    public bool IsAlertEnabled { get; set; } = false;
 
     public PlantViewModel() { }
 
@@ -23,14 +25,8 @@ public class PlantViewModel
         ImageUrl = plant.ImageUrl;
         SensorId = plant.Sensor?.Id ?? -1;
         SensorName = plant.Sensor?.Name ?? string.Empty;
-    }
-
-    public PlantViewModel(string name, string description, string imageUrl, int sensorId)
-    {
-        Name = name;
-        Description = description;
-        ImageUrl = imageUrl;
-        SensorId = sensorId;
+        AlertLevel = plant.AlertLevel;
+        IsAlertEnabled = plant.IsAlertEnabled;
     }
 
     public Plant ToPlant(IEnumerable<Sensor> sensors)
@@ -41,7 +37,9 @@ public class PlantViewModel
             Name = Name,
             Description = Description,
             ImageUrl = ImageUrl,
-            Sensor = sensors.Where(s => s.Id == SensorId).FirstOrDefault()
+            Sensor = sensors.Where(s => s.Id == SensorId).FirstOrDefault(),
+            AlertLevel = AlertLevel,
+            IsAlertEnabled = IsAlertEnabled
         };
     }
 }
