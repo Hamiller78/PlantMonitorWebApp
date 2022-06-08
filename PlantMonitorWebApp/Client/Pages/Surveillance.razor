@@ -17,7 +17,8 @@
 <h1>Surveillance</h1>
 
 <RadzenDataGrid @ref="_dataGrid" AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced" PageSize="5" AllowPaging="true" AllowSorting="true"
-                Data="@_PlantViewModels" TItem="PlantViewModel" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
+                Data="@_PlantViewModels" TItem="PlantViewModel" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or"
+                CellRender="@CellRender">
     <Columns>
         <RadzenDataGridColumn TItem="PlantViewModel" Property="Name" Filterable="true" Title="Name" Frozen="true" Width="140px" TextAlign="TextAlign.Center" />
         <RadzenDataGridColumn TItem="PlantViewModel" Title="Foto" Frozen="true" Sortable="false" Filterable="false" Width="60px">
@@ -32,7 +33,7 @@
 
 
 @code {
-    private RadzenDataGrid<PlantViewModel> _dataGrid;
+    private RadzenDataGrid<PlantViewModel>? _dataGrid;
     private List<PlantViewModel> _PlantViewModels = new List<PlantViewModel>();
     private HubConnection? _hubConnection;
     private List<string> _messages = new List<string>();
@@ -96,4 +97,20 @@
             }
         }
     }
+
+    void CellRender(DataGridCellRenderEventArgs<PlantViewModel> args)
+    {
+        if (args.Column.Property == "FormattedSensorValue")
+        {
+            if (args.Data.IsAlertEnabled && args.Data.SensorValue * 100 < args.Data.AlertLevel)
+            {
+                args.Attributes.Add("style", "background-color: #ff6d41");
+            }
+            else
+            {
+                args.Attributes.Add("style", "background-color: white");                
+            }
+        }
+    }
+
 }
