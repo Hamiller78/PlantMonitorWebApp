@@ -29,6 +29,24 @@ public class PlantViewModel
         IsAlertEnabled = plant.IsAlertEnabled;
     }
 
+    public PlantViewModel DeepCopy()
+    {
+        PlantViewModel clone = (PlantViewModel)this.MemberwiseClone();
+
+        return clone;
+    }
+
+    public void SetValuesFrom(PlantViewModel sourceVM)
+    {
+        Name = sourceVM.Name;
+        Description = sourceVM.Description;
+        ImageUrl = sourceVM.ImageUrl;
+        SensorId = sourceVM.SensorId;
+        SensorName = sourceVM.SensorName;
+        AlertLevel = sourceVM.AlertLevel;
+        IsAlertEnabled = sourceVM.IsAlertEnabled;
+    }
+
     public Plant ToPlant(IEnumerable<Sensor> sensors)
     {
         return new Plant()

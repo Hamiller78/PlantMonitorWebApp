@@ -21,6 +21,19 @@ namespace PlantMonitorWebApp.Shared.ViewModels
             UriString = sensor.ServiceUri?.ToString() ?? string.Empty;
         }
 
+        public SensorViewModel DeepCopy()
+        {
+            SensorViewModel clone = (SensorViewModel)this.MemberwiseClone();
+
+            return clone;
+        }
+
+        public void SetValuesFrom(SensorViewModel sourceVM)
+        {
+            Name = sourceVM.Name;
+            UriString = sourceVM.UriString;
+        }
+
         public Sensor ToSensor()
         {
             return new Sensor() { Id = Id, Name = Name, ServiceUri = new Uri(UriString ?? string.Empty) };
