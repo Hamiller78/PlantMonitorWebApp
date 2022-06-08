@@ -16,5 +16,7 @@ namespace PlantMonitorWebApp.Shared.Models
         public string Description { get; set; } = string.Empty;
         public string ImageUrl { get; set; } = string.Empty;
         public Sensor? Sensor { get; set; }
+        public int AlertLevel { get; set; } = 0;
+        public bool IsAlertEnabled { get; set; } = false;
     }
 }

@@ -52,6 +52,8 @@ namespace PlantMonitorWebApp.Repository.Classes
                 dbPlant.Description = plant.Description;
                 dbPlant.Sensor = plant.Sensor;
                 dbPlant.ImageUrl = plant.ImageUrl;
+                dbPlant.AlertLevel = plant.AlertLevel;
+                dbPlant.IsAlertEnabled = plant.IsAlertEnabled;
                 _context.SaveChanges();
             }
             catch (Exception ex)

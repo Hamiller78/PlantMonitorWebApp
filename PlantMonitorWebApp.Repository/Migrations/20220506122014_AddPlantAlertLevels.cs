@@ -1,11 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace PlantMonitorWebApp.Repository.Migrations
 {
-    public partial class RecreateProduction : Migration
+    public partial class AddPlantAlertLevels : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,10 +12,10 @@ namespace PlantMonitorWebApp.Repository.Migrations
                 name: "Sensor",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    ServiceUri = table.Column<string>(type: "text", nullable: true)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    ServiceUri = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -27,12 +26,14 @@ namespace PlantMonitorWebApp.Repository.Migrations
                 name: "Plant",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
-                    ImageUrl = table.Column<string>(type: "text", nullable: false),
-                    SensorId = table.Column<int>(type: "integer", nullable: true)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    ImageUrl = table.Column<string>(type: "TEXT", nullable: false),
+                    SensorId = table.Column<int>(type: "INTEGER", nullable: true),
+                    AlertLevel = table.Column<int>(type: "INTEGER", nullable: false),
+                    IsAlertEnabled = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
