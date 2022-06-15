@@ -12,6 +12,7 @@ using PlantMonitorWebApp.Server.Services.DataUpdater;
 using PlantMonitorWebApp.Server.Services.MessageSender;
 using PlantMonitorWebApp.Shared.Factories;
 using PlantMonitorWebApp.Shared.Interfaces;
+using Microsoft.Extensions.Azure;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -65,6 +66,11 @@ builder.Services.AddResponseCompression(opts =>
         new[] { "application/octet-stream" });
 });
 builder.Services.AddHostedService<RestSensorService>();
+builder.Services.AddAzureClients(clientBuilder =>
+{
+    clientBuilder.AddBlobServiceClient(builder.Configuration["ConnectionStrings:ImageBlobStorage:blob"], preferMsi: true);
+    clientBuilder.AddQueueServiceClient(builder.Configuration["ConnectionStrings:ImageBlobStorage:queue"], preferMsi: true);
+});
 
 var app = builder.Build();
 
