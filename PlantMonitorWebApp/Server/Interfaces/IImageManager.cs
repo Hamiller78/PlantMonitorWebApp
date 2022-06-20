@@ -2,8 +2,10 @@
 {
     public interface IImageManager
     {
-        Uri FetchImage(string id);
-        void StoreImage(); //Pass image in which format? Byte array?
+        void InitStorage();
+        BinaryData FetchImage(string imageName);
+        void StoreImage(string imageName, BinaryData imageData);
+        void DeleteImage(string imageName);
 
     }
 }
