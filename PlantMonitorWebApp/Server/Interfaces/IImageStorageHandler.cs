@@ -1,6 +1,6 @@
 ﻿namespace PlantMonitorWebApp.Server.Interfaces
 {
-    public interface IImageManager
+    public interface IImageStorageHandler
     {
         void InitStorage();
         BinaryData FetchImage(string imageName);

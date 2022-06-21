@@ -10,13 +10,13 @@ using Xunit;
 
 namespace UnitTests
 {
-    public class BlobImageManagerTests
+    public class BlobImageHandlerTests
     {
-        private ILogger<BlobImageManager> _logger;
+        private ILogger<ImageAzureBlobHandler> _logger;
 
-        public BlobImageManagerTests()
+        public BlobImageHandlerTests()
         {
-            _logger = new Mock<ILogger<BlobImageManager>>().Object;
+            _logger = new Mock<ILogger<ImageAzureBlobHandler>>().Object;
         }
 
 
@@ -24,20 +24,18 @@ namespace UnitTests
         public void UploadImageFile()
         {
             IConfiguration conf = UseConfigWithSecrets();
-            string connectionString = conf["ConnectionStrings:ImageBlobStorage"];
-            BlobImageManager testManager = new BlobImageManager(connectionString, _logger);
+            ImageAzureBlobHandler testManager = new ImageAzureBlobHandler(conf, _logger);
             testManager.InitStorage();
 
             BinaryData imageData = new BinaryData(File.ReadAllBytes("./Testdata/CactusPic.png"));
-            testManager.StoreImage("TestCactus.png", imageData);
+            testManager.StoreImage("img-1234", imageData);
         }
 
         [Fact]
         public void FetchImageFile()
         {
             IConfiguration conf = UseConfigWithSecrets();
-            string connectionString = conf["ConnectionStrings:ImageBlobStorage"];
-            BlobImageManager testManager = new BlobImageManager(connectionString, _logger);
+            ImageAzureBlobHandler testManager = new ImageAzureBlobHandler(conf, _logger);
             testManager.InitStorage();
 
             BinaryData imageData = testManager.FetchImage("TestCactus.png");
@@ -47,8 +45,7 @@ namespace UnitTests
         public void DeleteImageFile()
         {
             IConfiguration conf = UseConfigWithSecrets();
-            string connectionString = conf["ConnectionStrings:ImageBlobStorage"];
-            BlobImageManager testManager = new BlobImageManager(connectionString, _logger);
+            ImageAzureBlobHandler testManager = new ImageAzureBlobHandler(conf, _logger);
             testManager.InitStorage();
 
             testManager.DeleteImage("TestCactus.png");

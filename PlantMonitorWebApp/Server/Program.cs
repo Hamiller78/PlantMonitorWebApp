@@ -9,6 +9,7 @@ using PlantMonitorWebApp.Server.Hubs;
 using PlantMonitorWebApp.Server.Interfaces;
 using PlantMonitorWebApp.Server.Services;
 using PlantMonitorWebApp.Server.Services.DataUpdater;
+using PlantMonitorWebApp.Server.Services.ImageManager;
 using PlantMonitorWebApp.Server.Services.MessageSender;
 using PlantMonitorWebApp.Shared.Factories;
 using PlantMonitorWebApp.Shared.Interfaces;
@@ -58,6 +59,7 @@ builder.Services.AddSingleton<IMessageSender, SignalRSender>();
 builder.Services.AddSingleton<IDataSourceFactory, RestDataSourceFactory>();
 builder.Services.AddScoped<IPlantRepository, PlantRepository>();
 builder.Services.AddScoped<ISensorRepository, SensorRepository>();
+builder.Services.AddScoped<IImageStorageHandler, ImageAzureBlobHandler>();
 
 // From SignalR tutorial adding a ChatHub. Do we need this as well?
 builder.Services.AddResponseCompression(opts =>

@@ -1,22 +1,23 @@
 ﻿using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Microsoft.Extensions.Configuration;
 using PlantMonitorWebApp.Server.Interfaces;
 
 namespace PlantMonitorWebApp.Server.Services.ImageManager
 {
-    public class BlobImageManager : IImageManager
+    public class ImageAzureBlobHandler : IImageStorageHandler
     {
         private const string CONTAINERNAME = "images";
 
-        public string ConnectionString { get; init; }
-        private readonly ILogger<BlobImageManager> _logger;
+        private readonly string _connectionString;
+        private readonly ILogger<ImageAzureBlobHandler> _logger;
 
         private BlobContainerClient? _containerClient = null;
 
-        public BlobImageManager(string connectionString, ILogger<BlobImageManager> logger)
+        public ImageAzureBlobHandler(IConfiguration config, ILogger<ImageAzureBlobHandler> logger)
         {
-            ConnectionString = connectionString;
+            _connectionString = config["ConnectionStrings:ImageBlobStorage"];
             _logger = logger;
         }
 
@@ -24,7 +25,7 @@ namespace PlantMonitorWebApp.Server.Services.ImageManager
         {
             try
             {
-                BlobServiceClient serviceClient = new(ConnectionString);
+                BlobServiceClient serviceClient = new(_connectionString);
                 _containerClient = serviceClient.GetBlobContainerClient(CONTAINERNAME);
                 _containerClient.CreateIfNotExists();
             }
