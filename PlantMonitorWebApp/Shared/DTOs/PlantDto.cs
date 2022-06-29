@@ -7,7 +7,7 @@ namespace PlantMonitorWebApp.Shared.DTOs
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string ImageUrl { get; set; }
+        public int? ImageId { get; set; }
         public int? SensorId { get; set; } 
 
         public PlantDto(Plant plant)
@@ -15,7 +15,7 @@ namespace PlantMonitorWebApp.Shared.DTOs
             Id = plant.Id;
             Name = plant.Name;
             Description = plant.Description;
-            ImageUrl = plant.ImageUrl;
+            ImageId = plant.StoredImage?.Id;
             SensorId = plant.Sensor?.Id;
         }
 

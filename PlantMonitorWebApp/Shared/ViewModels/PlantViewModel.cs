@@ -7,7 +7,8 @@ public class PlantViewModel
     public int Id { get; set; }
     public string Name { get; set; } = "";
     public string Description { get; set; } = "";
-    public string ImageUrl { get; set; } = "";
+    public int ImageId { get; set; } = -1;
+    public string? ImageUrl { get; set; } = null;
     public int SensorId { get; set; } = -1;
     public string SensorName { get; set; } = string.Empty;
     public string FormattedSensorValue => string.Format("{0,7:##0.000}%", 100 * SensorValue);
@@ -22,7 +23,9 @@ public class PlantViewModel
         Id = plant.Id;
         Name = plant.Name;
         Description = plant.Description;
-        ImageUrl = plant.ImageUrl;
+        ImageId = plant.StoredImage?.Id ?? -1;
+        string? fileName = plant.StoredImage?.FileName ?? null;
+        ImageUrl = fileName is not null ? "/Images/Fetch?id=" + fileName : null;
         SensorId = plant.Sensor?.Id ?? -1;
         SensorName = plant.Sensor?.Name ?? string.Empty;
         AlertLevel = plant.AlertLevel;
@@ -40,21 +43,21 @@ public class PlantViewModel
     {
         Name = sourceVM.Name;
         Description = sourceVM.Description;
-        ImageUrl = sourceVM.ImageUrl;
+        ImageId = sourceVM.ImageId;
         SensorId = sourceVM.SensorId;
         SensorName = sourceVM.SensorName;
         AlertLevel = sourceVM.AlertLevel;
         IsAlertEnabled = sourceVM.IsAlertEnabled;
     }
 
-    public Plant ToPlant(IEnumerable<Sensor> sensors)
+    public Plant ToPlant(IEnumerable<Sensor> sensors, IEnumerable<StoredImage> images)
     {
         return new Plant()
         {
             Id = Id,
             Name = Name,
             Description = Description,
-            ImageUrl = ImageUrl,
+            StoredImage = images.Where(i => i.Id == ImageId).FirstOrDefault(),
             Sensor = sensors.Where(s => s.Id == SensorId).FirstOrDefault(),
             AlertLevel = AlertLevel,
             IsAlertEnabled = IsAlertEnabled

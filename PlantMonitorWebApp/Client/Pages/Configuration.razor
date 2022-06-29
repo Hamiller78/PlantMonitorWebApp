@@ -132,6 +132,7 @@
     RadzenDataGrid<PlantViewModel>? _plantDataGrid;
 
     IEnumerable<Sensor>? _sensors;
+    IEnumerable<StoredImage> _images;
     List<SensorViewModel>? _sensorViewModels;
     List<PlantViewModel>? _plantViewModels;
 
@@ -321,5 +322,10 @@
         }
 
         await _plantDataGrid.Reload();
+    }
+
+    async Task LoadImages()
+    {
+        _images = await imageAccessor.GetImagesAsync();
     }
 }

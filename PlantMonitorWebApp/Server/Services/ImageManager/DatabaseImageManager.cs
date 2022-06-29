@@ -14,7 +14,7 @@ namespace PlantMonitorWebApp.Server.Services.ImageManager
 
         public string GenerateImageName()
         {
-            return string.Empty;
+            return Guid.NewGuid().ToString();
         }
     }
 }
