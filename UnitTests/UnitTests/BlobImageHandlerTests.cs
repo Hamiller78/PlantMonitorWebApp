@@ -24,7 +24,7 @@ namespace UnitTests
         public void UploadImageFile()
         {
             IConfiguration conf = UseConfigWithSecrets();
-            ImageAzureBlobHandler testManager = new ImageAzureBlobHandler(conf, _logger);
+            ImageAzureBlobHandler testManager = new (conf, _logger);
             testManager.InitStorage();
 
             BinaryData imageData = new BinaryData(File.ReadAllBytes("./Testdata/CactusPic.png"));
@@ -35,7 +35,7 @@ namespace UnitTests
         public void FetchImageFile()
         {
             IConfiguration conf = UseConfigWithSecrets();
-            ImageAzureBlobHandler testManager = new ImageAzureBlobHandler(conf, _logger);
+            ImageAzureBlobHandler testManager = new (conf, _logger);
             testManager.InitStorage();
 
             BinaryData imageData = testManager.FetchImage("TestCactus.png");
@@ -45,7 +45,7 @@ namespace UnitTests
         public void DeleteImageFile()
         {
             IConfiguration conf = UseConfigWithSecrets();
-            ImageAzureBlobHandler testManager = new ImageAzureBlobHandler(conf, _logger);
+            ImageAzureBlobHandler testManager = new (conf, _logger);
             testManager.InitStorage();
 
             testManager.DeleteImage("TestCactus.png");
