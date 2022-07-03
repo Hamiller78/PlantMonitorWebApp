@@ -51,15 +51,16 @@ namespace PlantMonitorWebApp.Server.Controllers
                 return BadRequest("File is not an image.");
             }
 
+            // TODO: Generate file name for blob storage
+            string blobFileName = file.FileName;
             using (MemoryStream byteStream = new())
             {
-                // TODO: Generate file name for blob storage
                 file.CopyTo(byteStream);
                 byte[] fileBytes = byteStream.ToArray();
-                _storageHandler.StoreImage("new name", new BinaryData(fileBytes));
+                _storageHandler.StoreImage(blobFileName, new BinaryData(fileBytes));
             };
 
-            return Ok();
+            return Ok(blobFileName);
         }
 
     }

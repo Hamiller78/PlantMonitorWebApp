@@ -52,6 +52,10 @@
                         <Template Context="data">
                             <RadzenImage Path="@data.ImageUrl" style="width: 40px; height: 40px; border-radius: 8px;" />
                         </Template>
+                        <EditTemplate>
+                            <RadzenUpload Url="Images/upload" Accept="image/*" Progress=@(args => OnProgress(args, "Single file upload")) class="w-100">
+                            </RadzenUpload>
+                        </EditTemplate>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="PlantViewModel" Property="SensorName" Title="Sensor" Frozen="false" Width="70px">
                         <EditTemplate Context="plant">
@@ -148,6 +152,17 @@
         await LoadPlants();
     }
 
+    void OnProgress(UploadProgressArgs args, string name)
+    {
+        if (args.Progress == 100)
+        {
+            foreach (var file in args.Files)
+            {
+                notificationService.Notify(NotificationSeverity.Info, "Uploade file: {file.Name}");
+            }
+        }
+    }
+
     async Task EditPlantRow(PlantViewModel plant)
     {
         _originalPlant = plant.DeepCopy();
@@ -166,13 +181,13 @@
         HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
         if (plant == _plantToInsert)
         {
-            result = await plantAccessor.CreatePlantAsync(plant.ToPlant(_sensors));
+            result = await plantAccessor.CreatePlantAsync(plant.ToPlant(_sensors, _images));
             _plantToInsert = null;
         }
         else
         {
             _originalPlant = null;
-            result = await plantAccessor.UpdatePlantAsync(plant.ToPlant(_sensors));
+            result = await plantAccessor.UpdatePlantAsync(plant.ToPlant(_sensors, _images));
         }
         await LoadPlants();
 
