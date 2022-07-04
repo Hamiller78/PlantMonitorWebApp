@@ -7,7 +7,6 @@ public class PlantViewModel
     public int Id { get; set; }
     public string Name { get; set; } = "";
     public string Description { get; set; } = "";
-    public int ImageId { get; set; } = -1;
     public string? ImageUrl { get; set; } = null;
     public int SensorId { get; set; } = -1;
     public string SensorName { get; set; } = string.Empty;
@@ -23,9 +22,7 @@ public class PlantViewModel
         Id = plant.Id;
         Name = plant.Name;
         Description = plant.Description;
-        ImageId = plant.StoredImage?.Id ?? -1;
-        string? fileName = plant.StoredImage?.FileName ?? null;
-        ImageUrl = fileName is not null ? "/Images/Fetch?id=" + fileName : null;
+        ImageUrl = plant.ImageUrl;
         SensorId = plant.Sensor?.Id ?? -1;
         SensorName = plant.Sensor?.Name ?? string.Empty;
         AlertLevel = plant.AlertLevel;
@@ -43,21 +40,21 @@ public class PlantViewModel
     {
         Name = sourceVM.Name;
         Description = sourceVM.Description;
-        ImageId = sourceVM.ImageId;
+        ImageUrl = sourceVM.ImageUrl;
         SensorId = sourceVM.SensorId;
         SensorName = sourceVM.SensorName;
         AlertLevel = sourceVM.AlertLevel;
         IsAlertEnabled = sourceVM.IsAlertEnabled;
     }
 
-    public Plant ToPlant(IEnumerable<Sensor> sensors, IEnumerable<StoredImage> images)
+    public Plant ToPlant(IEnumerable<Sensor> sensors)
     {
         return new Plant()
         {
             Id = Id,
             Name = Name,
             Description = Description,
-            StoredImage = images.Where(i => i.Id == ImageId).FirstOrDefault(),
+            ImageUrl = ImageUrl ?? string.Empty,
             Sensor = sensors.Where(s => s.Id == SensorId).FirstOrDefault(),
             AlertLevel = AlertLevel,
             IsAlertEnabled = IsAlertEnabled

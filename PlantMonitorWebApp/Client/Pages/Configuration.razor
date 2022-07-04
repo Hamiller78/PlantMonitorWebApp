@@ -1,9 +1,9 @@
 ﻿@page "/configuration"
-@using PlantMonitorWebApp.Client.DataAccessor;
+@using PlantMonitorWebApp.Client.DataAccessor
 @using PlantMonitorWebApp.Shared
 @using PlantMonitorWebApp.Shared.Models
-@using PlantMonitorWebApp.Shared.ViewModels;
-@using System.Net;
+@using PlantMonitorWebApp.Shared.ViewModels
+@using System.Net
 @inject HttpClient Http
 @inject PlantAccessor plantAccessor
 @inject SensorAccessor sensorAccessor
@@ -53,7 +53,8 @@
                             <RadzenImage Path="@data.ImageUrl" style="width: 40px; height: 40px; border-radius: 8px;" />
                         </Template>
                         <EditTemplate>
-                            <RadzenUpload Url="Images/upload" Accept="image/*" Progress=@(args => OnProgress(args, "Single file upload")) class="w-100">
+                            <RadzenUpload Url="Images/upload" Accept="image/*" Multiple="false" Complete=@(response => notificationService.Notify(NotificationSeverity.Info, $"Upload complete."))
+                                          Error=@( args => OnError(args)) class="w-100">
                             </RadzenUpload>
                         </EditTemplate>
                     </RadzenDataGridColumn>
@@ -136,7 +137,6 @@
     RadzenDataGrid<PlantViewModel>? _plantDataGrid;
 
     IEnumerable<Sensor>? _sensors;
-    IEnumerable<StoredImage> _images;
     List<SensorViewModel>? _sensorViewModels;
     List<PlantViewModel>? _plantViewModels;
 
@@ -152,17 +152,6 @@
         await LoadPlants();
     }
 
-    void OnProgress(UploadProgressArgs args, string name)
-    {
-        if (args.Progress == 100)
-        {
-            foreach (var file in args.Files)
-            {
-                notificationService.Notify(NotificationSeverity.Info, "Uploade file: {file.Name}");
-            }
-        }
-    }
-
     async Task EditPlantRow(PlantViewModel plant)
     {
         _originalPlant = plant.DeepCopy();
@@ -176,18 +165,23 @@
         await _plantDataGrid.InsertRow(_plantToInsert);
     }
 
+    void OnError(UploadErrorEventArgs args)
+    {
+        notificationService.Notify(NotificationSeverity.Error, $"Error uploading file: {args.Message}");
+    }
+
     async Task SavePlantRow(PlantViewModel plant)
     {
         HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
         if (plant == _plantToInsert)
         {
-            result = await plantAccessor.CreatePlantAsync(plant.ToPlant(_sensors, _images));
+            result = await plantAccessor.CreatePlantAsync(plant.ToPlant(_sensors));
             _plantToInsert = null;
         }
         else
         {
             _originalPlant = null;
-            result = await plantAccessor.UpdatePlantAsync(plant.ToPlant(_sensors, _images));
+            result = await plantAccessor.UpdatePlantAsync(plant.ToPlant(_sensors));
         }
         await LoadPlants();
 
@@ -337,10 +331,5 @@
         }
 
         await _plantDataGrid.Reload();
-    }
-
-    async Task LoadImages()
-    {
-        _images = await imageAccessor.GetImagesAsync();
     }
 }

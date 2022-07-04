@@ -51,7 +51,7 @@ namespace PlantMonitorWebApp.Repository.Classes
                 dbPlant.Name = plant.Name;
                 dbPlant.Description = plant.Description;
                 dbPlant.Sensor = plant.Sensor;
-                dbPlant.StoredImage = plant.StoredImage;
+                dbPlant.ImageUrl = plant.ImageUrl;
                 dbPlant.AlertLevel = plant.AlertLevel;
                 dbPlant.IsAlertEnabled = plant.IsAlertEnabled;
                 _context.SaveChanges();
