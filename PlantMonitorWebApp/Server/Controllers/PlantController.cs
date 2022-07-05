@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
 using PlantMonitorWebApp.Repository.Interfaces;
+using PlantMonitorWebApp.Server.Interfaces;
 using PlantMonitorWebApp.Shared.Models;
 
 namespace PlantMonitorWebApp.Server.Controllers
@@ -10,9 +11,14 @@ namespace PlantMonitorWebApp.Server.Controllers
     public class PlantController : ControllerBase
     {
         readonly IPlantRepository _plantRepo;
+        readonly IImageStorageHandler _imageStorageHandler;
+        readonly ILogger<PlantController> _logger;
 
-        public PlantController(IPlantRepository plantRepo)
-            => _plantRepo = plantRepo;
+        public PlantController(IPlantRepository plantRepo, IImageStorageHandler imageStorageHandler, ILogger<PlantController> logger)
+        {
+            (_plantRepo, _imageStorageHandler, _logger) = (plantRepo, imageStorageHandler, logger);
+            _imageStorageHandler.InitStorage();
+        }
 
         [HttpGet("GetList")]
         public IActionResult List()
@@ -45,9 +51,8 @@ namespace PlantMonitorWebApp.Server.Controllers
             }
         }
 
-
         [HttpPost("Insert")]
-        public IActionResult Insert([FromBody]Plant plant)
+        public IActionResult Insert([FromBody] Plant plant)
         {
             try
             {
@@ -61,10 +66,12 @@ namespace PlantMonitorWebApp.Server.Controllers
         }
 
         [HttpPost("Update")]
-        public IActionResult Update([FromBody]Plant plant)
+        public IActionResult Update([FromBody] Plant plant)
         {
             try
             {
+                DeleteOldImage(plant);
+                // TODO: This is now inefficient, since the repo class will get the database entry again after getting it to check the imageUrl above
                 _plantRepo.Update(plant);
                 return Ok();
             }
@@ -85,6 +92,30 @@ namespace PlantMonitorWebApp.Server.Controllers
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        private void DeleteOldImage(Plant plant)
+        {
+            // Delete the old image if it was changed
+            // TODO: This is pretty ugly, the problem is that the database repository doesn't know about the blob storage handler
+            // Perhaps the storage handler should go into the repository project?
+            try
+            {
+                Plant? oldPlant = _plantRepo.GetById(plant.Id);
+                if (oldPlant != null && oldPlant.ImageUrl != plant.ImageUrl)
+                {
+                    string imageUrl = oldPlant.ImageUrl;
+                    string imageFileName = imageUrl.Split('?')[1].Split('&').Where(p => p.StartsWith("image=")).SingleOrDefault()?.Substring(6) ?? string.Empty;
+                    if (!string.IsNullOrEmpty(imageFileName))
+                    {
+                        _imageStorageHandler.DeleteImage(imageFileName);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Exception in PlantController while attempting to delete image file from storage.");
             }
         }
     }

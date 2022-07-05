@@ -7,7 +7,7 @@ public class PlantViewModel
     public int Id { get; set; }
     public string Name { get; set; } = "";
     public string Description { get; set; } = "";
-    public string ImageUrl { get; set; } = "";
+    public string? ImageUrl { get; set; } = null;
     public int SensorId { get; set; } = -1;
     public string SensorName { get; set; } = string.Empty;
     public string FormattedSensorValue => string.Format("{0,7:##0.000}%", 100 * SensorValue);
@@ -54,7 +54,7 @@ public class PlantViewModel
             Id = Id,
             Name = Name,
             Description = Description,
-            ImageUrl = ImageUrl,
+            ImageUrl = ImageUrl ?? string.Empty,
             Sensor = sensors.Where(s => s.Id == SensorId).FirstOrDefault(),
             AlertLevel = AlertLevel,
             IsAlertEnabled = IsAlertEnabled

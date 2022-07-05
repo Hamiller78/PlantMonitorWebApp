@@ -42,9 +42,9 @@ namespace PlantMonitorWebApp.Shared.TestData
 
             var plantList = new List<Plant>
             {
-                new Plant() { Name = "Judith", Description = "Weihnachtsstern", ImageUrl = "/Images/CactusPic.png", Sensor = sensorList[0]},
-                new Plant() { Name = "Mister Nancy", Description = "Palme", ImageUrl = "/Images/CactusPic.png", Sensor = sensorList[1]},
-                new Plant() { Name = "Harry", Description = "Philodendron", ImageUrl = "/Images/CactusPic.png", Sensor = sensorList[0]}
+                new Plant() { Name = "Judith", Description = "Weihnachtsstern", Sensor = sensorList[0]},
+                new Plant() { Name = "Mister Nancy", Description = "Palme", Sensor = sensorList[1]},
+                new Plant() { Name = "Harry", Description = "Philodendron", Sensor = sensorList[0]}
             };
 
             return plantList;
