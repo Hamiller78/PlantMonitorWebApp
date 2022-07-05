@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
+using MimeMapping;
+using System.IO;
 
 using PlantMonitorWebApp.Server.Interfaces;
 using PlantMonitorWebApp.Shared.Models;
@@ -22,12 +24,13 @@ namespace PlantMonitorWebApp.Server.Controllers
         }
 
         [HttpGet("Fetch")]
-        public IActionResult Item([FromQuery]string id)
+        public IActionResult Item([FromQuery]string image)
         {
             try
             {
-                BinaryData imageData = _storageHandler.FetchImage(id);
-                FileContentResult result = new(imageData.ToArray(), "image/png");
+                BinaryData imageData = _storageHandler.FetchImage(image);
+                string mimeType = MimeUtility.GetMimeMapping(image);
+                FileContentResult result = new(imageData.ToArray(), mimeType);
                 return result;
 
             }
@@ -51,16 +54,22 @@ namespace PlantMonitorWebApp.Server.Controllers
                 return BadRequest("File is not an image.");
             }
 
-            // TODO: Generate file name for blob storage
-            string blobFileName = file.FileName;
+            string blobFileName = GenerateFileName(file);
             using (MemoryStream byteStream = new())
             {
                 file.CopyTo(byteStream);
-                byte[] fileBytes = byteStream.ToArray();
-                _storageHandler.StoreImage(blobFileName, new BinaryData(fileBytes));
+                BinaryData fileBytes = new(byteStream.ToArray());
+                _storageHandler.StoreImage(blobFileName, fileBytes);
             };
 
             return Ok(blobFileName);
+        }
+
+        private string GenerateFileName(IFormFile file)
+        {
+            string randomName = Guid.NewGuid().ToString();
+            string extension = MimeUtility.GetExtensions(file.ContentType)[0];
+            return randomName + "." + extension;
         }
 
     }

@@ -100,7 +100,7 @@ namespace PlantMonitorWebApp.Server.Services.ImageManager
                 BlobClient blobClient = _containerClient.GetBlobClient(imageName);
                 if (!blobClient.Exists())
                 {
-                    _logger.LogError("Error while deleting image: Image with name {ImageName} does not existin storage.", imageName);
+                    _logger.LogError("Error while deleting image: Image with name {ImageName} does not exist in storage.", imageName);
                     throw new ApplicationException("Attempt to delete image from storage which doesn't exist.");
                 }
                 blobClient.Delete(DeleteSnapshotsOption.IncludeSnapshots);

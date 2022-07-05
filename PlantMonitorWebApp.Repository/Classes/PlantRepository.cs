@@ -50,7 +50,11 @@ namespace PlantMonitorWebApp.Repository.Classes
                 Plant dbPlant = _context.Plants.Where(s => s.Id == plant.Id).Single();
                 dbPlant.Name = plant.Name;
                 dbPlant.Description = plant.Description;
-                dbPlant.Sensor = plant.Sensor;
+                if (plant.Sensor is not null)
+                {
+                    Sensor dbSensor = _context.Sensors.Where(s => s.Id == plant.Sensor.Id).FirstOrDefault() ?? plant.Sensor;
+                    plant.Sensor = dbSensor;
+                }
                 dbPlant.ImageUrl = plant.ImageUrl;
                 dbPlant.AlertLevel = plant.AlertLevel;
                 dbPlant.IsAlertEnabled = plant.IsAlertEnabled;

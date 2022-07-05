@@ -4,6 +4,7 @@
 @using PlantMonitorWebApp.Shared.Models
 @using PlantMonitorWebApp.Shared.ViewModels
 @using System.Net
+@using System.Web
 @inject HttpClient Http
 @inject PlantAccessor plantAccessor
 @inject SensorAccessor sensorAccessor
@@ -52,9 +53,9 @@
                         <Template Context="data">
                             <RadzenImage Path="@data.ImageUrl" style="width: 40px; height: 40px; border-radius: 8px;" />
                         </Template>
-                        <EditTemplate>
-                            <RadzenUpload Url="Images/upload" Accept="image/*" Multiple="false" Complete=@(response => notificationService.Notify(NotificationSeverity.Info, $"Upload complete."))
-                                          Error=@( args => OnError(args)) class="w-100">
+                        <EditTemplate Context="plant">
+                            <RadzenUpload Url="Images/upload" Accept="image/*" Multiple="false" Complete=@( args => OnUploadComplete(args, plant))
+                                          Error=@( args => OnUploadError(args)) class="w-100">
                             </RadzenUpload>
                         </EditTemplate>
                     </RadzenDataGridColumn>
@@ -161,11 +162,17 @@
     async Task InsertPlant()
     {
         _plantToInsert = new PlantViewModel();
-        _plantToInsert.ImageUrl = "/Images/CactusPic.png";
         await _plantDataGrid.InsertRow(_plantToInsert);
     }
 
-    void OnError(UploadErrorEventArgs args)
+    void OnUploadComplete(UploadCompleteEventArgs args, PlantViewModel plant)
+    {
+        string newUrl = args.RawResponse;
+        plant.ImageUrl = "Images/Fetch?image=" + HttpUtility.UrlEncode(newUrl);
+        notificationService.Notify(NotificationSeverity.Info, $"Upload complete.");
+    }
+
+    void OnUploadError(UploadErrorEventArgs args)
     {
         notificationService.Notify(NotificationSeverity.Error, $"Error uploading file: {args.Message}");
     }
