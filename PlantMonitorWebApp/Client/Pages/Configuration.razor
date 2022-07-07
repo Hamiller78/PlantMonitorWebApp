@@ -182,13 +182,13 @@
         HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
         if (plant == _plantToInsert)
         {
-            result = await plantAccessor.CreatePlantAsync(plant.ToPlant(_sensors));
+            result = await plantAccessor.CreatePlantAsync(plant.ToPlant());
             _plantToInsert = null;
         }
         else
         {
             _originalPlant = null;
-            result = await plantAccessor.UpdatePlantAsync(plant.ToPlant(_sensors));
+            result = await plantAccessor.UpdatePlantAsync(plant.ToPlant());
         }
         await LoadPlants();
 

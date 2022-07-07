@@ -25,15 +25,6 @@ namespace PlantMonitorWebApp.Repository.Classes
         {
             try
             {
-                // The controller may also recreate an existing sensor object from the incoming request JSON.
-                // That has to be replaced by the sensor object representing the entry already in the database.
-                // We could use data transfer objects, which adds more overhead.
-                // But that includes dealing with correct references to existing objects, which we now have to do here anyway.
-                if (plant.Sensor is not null)
-                {
-                    Sensor dbSensor = _context.Sensors.Where(s => s.Id == plant.Sensor.Id).FirstOrDefault() ?? plant.Sensor;
-                    plant.Sensor = dbSensor;
-                }
                 _context.Plants.Add(plant);
                 _context.SaveChanges();
             }
@@ -50,11 +41,7 @@ namespace PlantMonitorWebApp.Repository.Classes
                 Plant dbPlant = _context.Plants.Where(s => s.Id == plant.Id).Single();
                 dbPlant.Name = plant.Name;
                 dbPlant.Description = plant.Description;
-                if (plant.Sensor is not null)
-                {
-                    Sensor dbSensor = _context.Sensors.Where(s => s.Id == plant.Sensor.Id).FirstOrDefault() ?? plant.Sensor;
-                    plant.Sensor = dbSensor;
-                }
+                dbPlant.SensorId = plant.SensorId;
                 dbPlant.ImageUrl = plant.ImageUrl;
                 dbPlant.AlertLevel = plant.AlertLevel;
                 dbPlant.IsAlertEnabled = plant.IsAlertEnabled;

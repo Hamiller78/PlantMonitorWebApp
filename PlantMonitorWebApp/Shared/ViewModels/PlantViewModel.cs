@@ -47,7 +47,7 @@ public class PlantViewModel
         IsAlertEnabled = sourceVM.IsAlertEnabled;
     }
 
-    public Plant ToPlant(IEnumerable<Sensor> sensors)
+    public Plant ToPlant()
     {
         return new Plant()
         {
@@ -55,7 +55,7 @@ public class PlantViewModel
             Name = Name,
             Description = Description,
             ImageUrl = ImageUrl ?? string.Empty,
-            Sensor = sensors.Where(s => s.Id == SensorId).FirstOrDefault(),
+            SensorId = SensorId,
             AlertLevel = AlertLevel,
             IsAlertEnabled = IsAlertEnabled
         };

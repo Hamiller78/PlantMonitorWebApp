@@ -16,7 +16,7 @@ namespace PlantMonitorWebApp.Shared.DTOs
             Name = plant.Name;
             Description = plant.Description;
             ImageUrl = plant.ImageUrl;
-            SensorId = plant.Sensor?.Id;
+            SensorId = plant.SensorId;
         }
 
     }
