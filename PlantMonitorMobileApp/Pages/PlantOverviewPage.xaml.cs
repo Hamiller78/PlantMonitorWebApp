@@ -1,20 +1,23 @@
-using PlantMonitorWebApp.Client.DataAccessor;
-using PlantMonitorWebApp.Client.Interfaces;
+using PlantMonitorWebApp.Shared.DataAccessor;
+using PlantMonitorWebApp.Shared.Interfaces;
 using PlantMonitorWebApp.Shared.Models;
+using System.Collections.ObjectModel;
 
 namespace PlantMonitorMobileApp.Pages;
 
 public partial class PlantOverviewPage : ContentPage
 {
-	const string PlantServiceUri = "";
-
 	readonly IPlantAccessor _plantAccessor;
 	public IEnumerable<Plant> Plants { get; set; }
 
 	public PlantOverviewPage()
 	{
 		InitializeComponent();
-		_plantAccessor = new PlantAccessor(new HttpClient());
+		HttpClient httpClient = new()
+		{
+			BaseAddress = new Uri("https://plantmonitorwebappserver20220208190443.azurewebsites.net/")
+		};
+		_plantAccessor = new PlantAccessor(httpClient);
 	}
 
 	protected override async void OnAppearing()
