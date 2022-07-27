@@ -24,6 +24,7 @@ public partial class PlantOverviewPage : ContentPage
 	{
 		base.OnAppearing();
 		Plants = await GetPlantsDataAsync();
+		listView.ItemsSource = Plants;
 	}
 
 	async Task<IEnumerable<Plant>> GetPlantsDataAsync()

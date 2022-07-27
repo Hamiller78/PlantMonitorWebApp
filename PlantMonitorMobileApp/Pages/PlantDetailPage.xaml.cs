@@ -23,6 +23,7 @@ public partial class PlantDetailPage : ContentPage
     {
         base.OnAppearing();
         Plants = await GetPlantsDataAsync();
+        carouselView.ItemsSource = Plants;
     }
 
     async Task<IEnumerable<Plant>> GetPlantsDataAsync()
