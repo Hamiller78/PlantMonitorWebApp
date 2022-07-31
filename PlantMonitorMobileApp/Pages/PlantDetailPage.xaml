@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converter="clr-namespace:PlantMonitorMobileApp.Converters"
+             x:Class="PlantMonitorMobileApp.Pages.PlantDetailPage"
+             Title="Details">
+    <ContentPage.Resources>
+        <converter:RelativeUriToAbsoluteUriConverter x:Key="RelativeUriToAbsoluteUri" />
+    </ContentPage.Resources>
+
+    <VerticalStackLayout>
+        <Label 
+            Text="Details"
+            VerticalOptions="Start" 
+            HorizontalOptions="Center" />
+        <CarouselView x:Name="carouselView" >
+            <CarouselView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout>
+                        <Frame HasShadow="True"
+                       BorderColor="DarkGray"
+                       CornerRadius="5"
+                       Margin="20"
+                       HeightRequest="300"
+                       HorizontalOptions="Center"
+                       VerticalOptions="StartAndExpand">
+                            <StackLayout>
+                                <Label Text="{Binding Name}"
+                               FontAttributes="Bold"
+                               FontSize="18"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Start" />
+                                <Image Source="{Binding ImageUrl, Converter={StaticResource RelativeUriToAbsoluteUri}}"
+                               Aspect="AspectFill"
+                               HeightRequest="150"
+                               WidthRequest="150"
+                               HorizontalOptions="Center" />
+                                <Label Text="Placeholder sensor value"
+                               HorizontalOptions="Center" />
+                            </StackLayout>
+                        </Frame>
+                    </StackLayout>
+                </DataTemplate>
+            </CarouselView.ItemTemplate>
+        </CarouselView>
+    </VerticalStackLayout>
+</ContentPage>

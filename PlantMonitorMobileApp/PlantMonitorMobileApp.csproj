@@ -48,4 +48,31 @@
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Compile Update="Pages\PlantOverviewPage.xaml.cs">
+	    <DependentUpon>PlantOverviewPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Pages\PlantDetailPage.xaml.cs">
+	    <DependentUpon>PlantDetailPage.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Pages\PlantOverviewPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\PlantDetailPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Data\" />
+	  <Folder Include="ViewModels\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\PlantMonitorWebApp\Shared\PlantMonitorWebApp.Shared.csproj" />
+	</ItemGroup>
+
 </Project>
