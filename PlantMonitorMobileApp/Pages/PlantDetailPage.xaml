@@ -39,9 +39,6 @@
                                 <Label                                    
                                     Text="{Binding SensorValue}"
                                     HorizontalOptions="Start">
-                                    <Label.BindingContext>
-                                        <viewmodels:SensorValueViewModel/>
-                                    </Label.BindingContext>
                                 </Label>
                             </StackLayout>
                         </Frame>
