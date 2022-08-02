@@ -9,8 +9,7 @@ namespace PlantMonitorMobileApp.Pages;
 
 public partial class PlantDetailPage : ContentPage
 {
-    readonly IPlantAccessor _plantAccessor;
-    public IEnumerable<Plant> Plants { get; set; }
+    private readonly IPlantAccessor _plantAccessor;
     private ObservableCollection<PlantViewModel> _plantVMs;
 
     public PlantDetailPage()

@@ -11,10 +11,9 @@
 
     <VerticalStackLayout>
         <Label 
-            Text="Details"
-            VerticalOptions="Start" 
+            VerticalOptions="StartAndExpand" 
             HorizontalOptions="Center" />
-        <CarouselView x:Name="carouselView" >
+        <CarouselView x:Name="carouselView" HorizontalScrollBarVisibility="Always">
             <CarouselView.ItemTemplate>
                 <DataTemplate>
                     <StackLayout>
@@ -22,22 +21,28 @@
                        BorderColor="DarkGray"
                        CornerRadius="5"
                        Margin="20"
-                       HeightRequest="300"
+                       HeightRequest="600"
                        HorizontalOptions="Center"
                        VerticalOptions="StartAndExpand">
                             <StackLayout>
                                 <Label Text="{Binding Name}"
-                               FontAttributes="Bold"
-                               FontSize="18"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Start" />
+                                    FontAttributes="Bold"
+                                    FontSize="18"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Start" />
                                 <Image Source="{Binding ImageUrl, Converter={StaticResource RelativeUriToAbsoluteUri}}"
-                               Aspect="AspectFill"
-                               HeightRequest="150"
-                               WidthRequest="150"
-                               HorizontalOptions="Center" />
+                                    Aspect="AspectFill"
+                                    HeightRequest="300"
+                                    WidthRequest="300"
+                                    HorizontalOptions="Center" />
+                                <Label Text="{Binding Description}"
+                                    FontAttributes="Italic"
+                                    FontSize="14"
+                                    HorizontalOptions="Center" />
                                 <Label                                    
-                                    Text="{Binding SensorValue}"
+                                    Text="{Binding SensorValue, StringFormat='Sensor value is {0:F2}'}"
+                                    FontSize="24"
+                                    HeightRequest="50"
                                     HorizontalOptions="Start">
                                 </Label>
                             </StackLayout>
