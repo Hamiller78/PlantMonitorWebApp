@@ -1,3 +1,6 @@
+using System.Collections.ObjectModel;
+
+using PlantMonitorMobileApp.ViewModels;
 using PlantMonitorWebApp.Shared.DataAccessor;
 using PlantMonitorWebApp.Shared.Interfaces;
 using PlantMonitorWebApp.Shared.Models;
@@ -6,8 +9,8 @@ namespace PlantMonitorMobileApp.Pages;
 
 public partial class PlantDetailPage : ContentPage
 {
-    readonly IPlantAccessor _plantAccessor;
-    public IEnumerable<Plant> Plants { get; set; }
+    private readonly IPlantAccessor _plantAccessor;
+    private ObservableCollection<PlantViewModel> _plantVMs;
 
     public PlantDetailPage()
     {
@@ -22,13 +25,14 @@ public partial class PlantDetailPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        Plants = await GetPlantsDataAsync();
-        carouselView.ItemsSource = Plants;
+        _plantVMs = await GetPlantsDataAsync();
+        carouselView.ItemsSource = _plantVMs;
     }
 
-    async Task<IEnumerable<Plant>> GetPlantsDataAsync()
+    async Task<ObservableCollection<PlantViewModel>> GetPlantsDataAsync()
     {
         var plants = await _plantAccessor.GetPlantsAsync();
-        return plants;
+        ObservableCollection<PlantViewModel> plantVMs = new(plants.Select(p => new PlantViewModel(p)));
+        return plantVMs;
     }
 }
