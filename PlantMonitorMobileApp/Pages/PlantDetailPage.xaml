@@ -11,9 +11,9 @@
 
     <VerticalStackLayout>
         <Label 
-            VerticalOptions="StartAndExpand" 
+            VerticalOptions="Start" 
             HorizontalOptions="Center" />
-        <CarouselView x:Name="carouselView" HorizontalScrollBarVisibility="Always">
+        <CarouselView x:Name="carouselView" HeightRequest="600">
             <CarouselView.ItemTemplate>
                 <DataTemplate>
                     <StackLayout>
@@ -21,9 +21,7 @@
                        BorderColor="DarkGray"
                        CornerRadius="5"
                        Margin="20"
-                       HeightRequest="600"
-                       HorizontalOptions="Center"
-                       VerticalOptions="StartAndExpand">
+                       HorizontalOptions="Center">
                             <StackLayout>
                                 <Label Text="{Binding Name}"
                                     FontAttributes="Bold"
