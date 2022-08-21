@@ -25,15 +25,15 @@ namespace MockSensorService
 
             if (id == "1")
             {
-                response.WriteString($"value={GetFakeValue()}");
+                response.WriteString($"{GetFakeValue()}");
             }
             else if (id == "2")
             {
-                response.WriteString($"value={GetFakeValue2()}");
+                response.WriteString($"{GetFakeValue2()}");
             }
             else
             {
-                response.WriteString($"value=-1");
+                response.WriteString($"-1");
             }
 
             return response;
