@@ -18,31 +18,33 @@ namespace SensorService
     {
         [FunctionName("GetValue")]
         public static async Task<HttpResponseMessage> GetValue(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "GetValue/{entityKey}")] HttpRequestMessage req,
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "GetValue/{index}")] HttpRequestMessage req,
             [DurableClient] IDurableEntityClient client,
-            string entityKey)
+            int index)
         {
-            var entityId = new EntityId("Counter", entityKey);
-            var state = await client.ReadEntityStateAsync<Counter>(entityId);
+            var entityId = new EntityId("SensorValuesEntity", "StoredSensorValue");
+            var state = await client.ReadEntityStateAsync<SensorValuesEntity>(entityId);
 
             if (!state.EntityExists)
             {
                 return req.CreateResponse(HttpStatusCode.NotFound);
             }
-            return req.CreateResponse(HttpStatusCode.OK, state.EntityState.CurrentValue.ToString());
+            return req.CreateResponse(HttpStatusCode.OK, state.EntityState.CurrentValue.Values[index].Item1);
         }
 
         [FunctionName("SetValue")]
         public static async Task<HttpResponseMessage> IncrementCounter(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "SetValue/{entityKey}/{value}")] HttpRequestMessage req,
-            [DurableClient] IDurableEntityClient client,
-            string entityKey,
-            int value)
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "SetValue")] HttpRequestMessage req,
+            [DurableClient] IDurableEntityClient client)
         {
-            var entityId = new EntityId("Counter", entityKey.ToString().Trim());
+            string requestBody = await req.Content.ReadAsStringAsync();
+            SensorValuesDto pureSensorValues = JsonConvert.DeserializeObject<SensorValuesDto>(requestBody);
+            SensorValues timeStampedSensorValues = new(pureSensorValues);
+
+            var entityId = new EntityId("SensorValuesEntity", "StoredSensorValue");
 
             // One-way signal to the entity - does not await a response
-            await client.SignalEntityAsync(entityId, "Set", value);
+            await client.SignalEntityAsync(entityId, "Set", timeStampedSensorValues);
 
             return req.CreateResponse(HttpStatusCode.OK);
         }
