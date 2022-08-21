@@ -23,7 +23,7 @@ namespace PlantMonitorWebApp.Shared.DataSources
             HttpClient client = new();
             Task<HttpResponseMessage> response = client.GetAsync(_restServiceUri);
             string resultString = response.Result.Content.ReadAsStringAsync().Result;
-            double value = double.Parse(resultString[6..], CultureInfo.InvariantCulture);
+            double value = double.Parse(resultString, CultureInfo.InvariantCulture);
             return value;
         }
     }
