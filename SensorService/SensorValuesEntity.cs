@@ -22,7 +22,7 @@ namespace SensorService
         public double Get(int index)
         {
             (double?, DateTime) value = CurrentValue.Values[index];
-            if (value.Item1 != null || DateTime.Now - value.Item2 <= TimeSpan.FromMinutes(VALUE_EXPIRATION_IN_MINUTES))
+            if (value.Item1 != null && DateTime.Now - value.Item2 <= TimeSpan.FromMinutes(VALUE_EXPIRATION_IN_MINUTES))
             {
                 return value.Item1.Value;
             }
