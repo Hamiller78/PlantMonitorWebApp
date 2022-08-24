@@ -19,19 +19,6 @@ namespace SensorService
 
         public void Set(SensorValues amount) => this.CurrentValue = amount;
 
-        public double Get(int index)
-        {
-            (double?, DateTime) value = CurrentValue.Values[index];
-            if (value.Item1 != null && DateTime.Now - value.Item2 <= TimeSpan.FromMinutes(VALUE_EXPIRATION_IN_MINUTES))
-            {
-                return value.Item1.Value;
-            }
-            else
-            {
-                return -1d;
-            }
-        }
-
         [FunctionName(nameof(SensorValuesEntity))]
         public static Task Run([EntityTrigger] IDurableEntityContext ctx)
             => ctx.DispatchAsync<SensorValuesEntity>();

@@ -27,7 +27,7 @@ namespace SensorService
                              (null, DateTime.Now),
                              (null, DateTime.Now),
                              (null, DateTime.Now)
-                         };                        ;
+                         };
             }
         }
     }

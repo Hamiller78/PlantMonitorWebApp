@@ -16,6 +16,8 @@ namespace SensorService
 {
     public static class HttpTrigger
     {
+        const int VALUE_EXPIRATION_IN_MINUTES = 60;
+
         [FunctionName("GetValue")]
         public static async Task<HttpResponseMessage> GetValue(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "GetValue/{index}")] HttpRequestMessage req,
@@ -29,7 +31,15 @@ namespace SensorService
             {
                 return req.CreateResponse(HttpStatusCode.NotFound);
             }
-            return req.CreateResponse(HttpStatusCode.OK, state.EntityState.CurrentValue.Values[index].Item1);
+
+            (double?, DateTime) timedValue = state.EntityState.CurrentValue.Values[index];
+
+            double sensorValue = -1d;
+            if (DateTime.Now - timedValue.Item2 <= TimeSpan.FromMinutes(VALUE_EXPIRATION_IN_MINUTES))
+            {
+                sensorValue = timedValue.Item1 ?? -1d;
+            }
+            return req.CreateResponse(HttpStatusCode.OK, sensorValue);
         }
 
         [FunctionName("SetValue")]
