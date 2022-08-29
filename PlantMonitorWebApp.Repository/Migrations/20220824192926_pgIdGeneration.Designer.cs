@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PlantMonitorWebApp.Repository;
@@ -11,9 +12,10 @@ using PlantMonitorWebApp.Repository;
 namespace PlantMonitorWebApp.Repository.Migrations
 {
     [DbContext(typeof(PlantAppContext))]
-    partial class PlantAppContextModelSnapshot : ModelSnapshot
+    [Migration("20220824192926_pgIdGeneration")]
+    partial class pgIdGeneration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

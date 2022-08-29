@@ -31,14 +31,8 @@ builder.Services.AddSignalR();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-if (builder.Environment.IsProduction())
-{
-    builder.Services.AddDbContext<PlantAppContext>(options => options.UseNpgsql(configuration.GetConnectionString("PlantWebDb")));
-}
-else
-{
-    builder.Services.AddDbContext<PlantAppContext>(options => options.UseSqlite(configuration.GetConnectionString("SQLite")));
-}
+builder.Services.AddDbContext<PlantAppContext>(options => options.UseNpgsql(configuration.GetConnectionString("PlantWebDb")));
+
 builder.Services.AddLogging(logging =>
 {
     logging.ClearProviders();

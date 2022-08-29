@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Npgsql.EntityFrameworkCore;
 using PlantMonitorWebApp.Shared.Models;
 
 namespace PlantMonitorWebApp.Repository
@@ -12,6 +13,7 @@ namespace PlantMonitorWebApp.Repository
 
         protected override void OnModelCreating(ModelBuilder modelbuilder)
         {
+            modelbuilder.UseIdentityColumns();
             modelbuilder.Entity<Plant>().ToTable("Plant");
             modelbuilder.Entity<Sensor>().ToTable("Sensor");
         }
