@@ -19,7 +19,8 @@
         <RadzenTabsItem Text="Plants">
             <RadzenButton Icon="add_circle_outline" style="margin-bottom: 10px" Text="Add New Plant" Click="@InsertPlant" Disabled=@(_plantToInsert != null) />
             <RadzenDataGrid @ref="_plantDataGrid" AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced" PageSize="5" AllowPaging="true" AllowSorting="true"
-                            Data="@_plantViewModels" TItem="PlantViewModel" EditMode="DataGridEditMode.Single" ColumnWidth="500px" LogicalFilterOperator="LogicalFilterOperator.Or">
+                            Data="@_plantViewModels" TItem="PlantViewModel" EditMode="DataGridEditMode.Single" ColumnWidth="500px" LogicalFilterOperator="LogicalFilterOperator.Or"
+                            RowUpdate="@OnUpdatePlantRow" RowCreate="@OnCreatePlantRow">
                 <Columns>
                     <RadzenDataGridColumn TItem="PlantViewModel" Context="sensor" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
                         <Template Context="plant">
@@ -46,7 +47,7 @@
                     <RadzenDataGridColumn TItem="PlantViewModel" Property="Name" Filterable="true" Title="Name" Frozen="false" Width="140px" TextAlign="TextAlign.Center">
                         <EditTemplate Context="plant">
                             <RadzenTextBox @bind-Value="plant.Name" Style="width:100%; display: block" Name="plantName" />
-                            <RadzenRequiredValidator Text="Plant description is required" Component="plantName" Popup="true" />
+                            <RadzenRequiredValidator Text="Plant name is required" Component="plantName" Popup="true" />
                         </EditTemplate>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="PlantViewModel" Title="Foto" Frozen="false" Sortable="false" Filterable="false" Width="60px">
@@ -61,13 +62,13 @@
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="PlantViewModel" Property="SensorName" Title="Sensor" Frozen="false" Width="70px">
                         <EditTemplate Context="plant">
-                            <RadzenDropDown AllowClear="true" @bind-Value="plant.SensorId" Data="@_sensorViewModels" TextProperty="Name" ValueProperty="Id" Style="width:100%; display: block;" />
+                            <RadzenDropDown @bind-Value="plant.SensorId" Data="@_sensorViewModels" TextProperty="Name" ValueProperty="Id" Style="width:100%; display: block;" Name="plantSensorSelector" />
+                            <RadzenRequiredValidator DefaultValue="-1" Text="Sensor must be selected" Component="plantSensorSelector" Popup="true" />
                         </EditTemplate>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="PlantViewModel" Property="AlertLevel" Filterable="true" Title="Alert Level" Frozen="false" Width="36px" TextAlign="TextAlign.Center">
                         <EditTemplate Context="plant">
                             <RadzenNumeric @bind-Value="plant.AlertLevel" Min="0" Max="100" Style="width:100%; display: block" Name="plantAlertLevel" />
-                            <RadzenRequiredValidator Text="Plant alert level is required" Component="plantAlertLevel" Popup="true" />
                         </EditTemplate>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="PlantViewModel" Property="IsAlertEnabled" Filterable="true" Title="Alert Toggle" Frozen="false" Width="36px" TextAlign="TextAlign.Center">
@@ -81,7 +82,6 @@
                     <RadzenDataGridColumn TItem="PlantViewModel" Property="Description" Title="Beschreibung" Frozen="false" Width="200px">
                         <EditTemplate Context="plant">
                             <RadzenTextBox @bind-Value="plant.Description" Style="width:100%; display: block" Name="plantDescription" />
-                            <RadzenRequiredValidator Text="Plant description is required" Component="plantDescription" Popup="true" />
                         </EditTemplate>
                     </RadzenDataGridColumn>
                 </Columns>
@@ -90,7 +90,8 @@
         <RadzenTabsItem Text="Sensors">
             <RadzenButton Icon="add_circle_outline" style="margin-bottom: 10px" Text="Add New Sensor" Click="@InsertSensor" Disabled=@(_sensorToInsert != null) />
             <RadzenDataGrid @ref="_sensorDataGrid" AllowFiltering="true" AllowColumnResize="false" FilterMode="FilterMode.Advanced" PageSize="5" AllowPaging="true" AllowSorting="true"
-                            Data="@_sensorViewModels" TItem="SensorViewModel" EditMode="DataGridEditMode.Single" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
+                            Data="@_sensorViewModels" TItem="SensorViewModel" EditMode="DataGridEditMode.Single" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or"
+                            RowUpdate="@OnUpdateSensorRow" RowCreate="@OnCreateSensorRow">
                 <Columns>
                     <RadzenDataGridColumn TItem="SensorViewModel" Context="sensor" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
                         <Template Context="sensor">
@@ -153,6 +154,39 @@
         await LoadPlants();
     }
 
+    // Callback function of Plant datagrid for updating a row
+    async Task OnUpdatePlantRow(PlantViewModel plant)
+    {
+        HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+        _originalPlant = null;
+        result = await plantAccessor.UpdatePlantAsync(plant.ToPlant());
+
+        if (result.StatusCode == HttpStatusCode.OK)
+        {
+            notificationService.Notify(NotificationSeverity.Success, "Plant saved");
+        }
+        else
+        {
+            notificationService.Notify(NotificationSeverity.Error, "Error while saving plant.", result.StatusCode.ToString(), 10000);
+        }
+    }
+
+    // Callback function of Plant datagrid for creating a new Plant row
+    async Task OnCreatePlantRow(PlantViewModel plant)
+    {
+        HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+        result = await plantAccessor.CreatePlantAsync(plant.ToPlant());
+
+        if (result.StatusCode == HttpStatusCode.OK)
+        {
+            notificationService.Notify(NotificationSeverity.Success, "Plant saved");
+        }
+        else
+        {
+            notificationService.Notify(NotificationSeverity.Error, "Error while saving plant.", result.StatusCode.ToString(), 10000);
+        }
+    }
+
     async Task EditPlantRow(PlantViewModel plant)
     {
         _originalPlant = plant.DeepCopy();
@@ -165,6 +199,7 @@
         await _plantDataGrid.InsertRow(_plantToInsert);
     }
 
+    // Callback function for image upload
     void OnUploadComplete(UploadCompleteEventArgs args, PlantViewModel plant)
     {
         string newUrl = args.RawResponse;
@@ -172,38 +207,24 @@
         notificationService.Notify(NotificationSeverity.Info, $"Upload complete.");
     }
 
+    // Callback function for image upload returning an error
     void OnUploadError(UploadErrorEventArgs args)
     {
         notificationService.Notify(NotificationSeverity.Error, $"Error uploading file: {args.Message}");
     }
 
+    // Callback function for save button in a plant row
     async Task SavePlantRow(PlantViewModel plant)
     {
-        HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
         if (plant == _plantToInsert)
         {
-            result = await plantAccessor.CreatePlantAsync(plant.ToPlant());
             _plantToInsert = null;
-        }
-        else
-        {
-            _originalPlant = null;
-            result = await plantAccessor.UpdatePlantAsync(plant.ToPlant());
-        }
-        await LoadPlants();
-
-        if (result.StatusCode == HttpStatusCode.OK)
-        {
-            notificationService.Notify(NotificationSeverity.Success, "Plant saved");
-        }
-        else
-        {
-            notificationService.Notify(NotificationSeverity.Error, "Error while saving plant.", result.StatusCode.ToString(), 10000);
         }
 
         await _plantDataGrid.UpdateRow(plant);
     }
 
+    // Callback function for cancel button in a plant row
     void CancelPlantEdit(PlantViewModel plant)
     {
         if (plant == _plantToInsert)
@@ -219,6 +240,7 @@
         }
     }
 
+    // Callback function for delete button in plant row
     async Task DeletePlantRow(PlantViewModel plant)
     {
         if (plant == _plantToInsert)
@@ -241,32 +263,12 @@
         }
     }
 
-    async Task EditSensorRow(SensorViewModel sensor)
+    // Callback function of Sensor datagrid for updating a row
+    async Task OnUpdateSensorRow(SensorViewModel sensor)
     {
-        _originalSensor = sensor.DeepCopy();
-        await _sensorDataGrid.EditRow(sensor);
-    }
-
-    async Task InsertSensor()
-    {
-        _sensorToInsert = new SensorViewModel();
-        await _sensorDataGrid.InsertRow(_sensorToInsert);
-    }
-
-    async Task SaveSensorRow(SensorViewModel sensor)
-    {
-        HttpResponseMessage result;
-        if (sensor == _sensorToInsert)
-        {
-            result = await sensorAccessor.CreateSensorAsync(sensor.ToSensor());
-            await LoadSensors();
-            _sensorToInsert = null;
-        }
-        else
-        {
-            _originalSensor = null;
-            result = await sensorAccessor.UpdateSensorAsync(sensor.ToSensor());
-        }
+        HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+        _originalPlant = null;
+        result = await sensorAccessor.UpdateSensorAsync(sensor.ToSensor());
 
         if (result.StatusCode == HttpStatusCode.OK)
         {
@@ -276,10 +278,50 @@
         {
             notificationService.Notify(NotificationSeverity.Error, "Error while saving sensor.", result.StatusCode.ToString(), 10000);
         }
+    }
+
+    // Callback function of Sensor datagrid for creating a new Plant row
+    async Task OnCreateSensorRow(SensorViewModel sensor)
+    {
+        HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+        result = await sensorAccessor.CreateSensorAsync(sensor.ToSensor());
+
+        if (result.StatusCode == HttpStatusCode.OK)
+        {
+            notificationService.Notify(NotificationSeverity.Success, "Sensor saved");
+        }
+        else
+        {
+            notificationService.Notify(NotificationSeverity.Error, "Error while saving sensor.", result.StatusCode.ToString(), 10000);
+        }
+    }
+
+    // Callback function for edit button in sensor row
+    async Task EditSensorRow(SensorViewModel sensor)
+    {
+        _originalSensor = sensor.DeepCopy();
+        await _sensorDataGrid.EditRow(sensor);
+    }
+
+    // Callback function for Insert button for new sensor row
+    async Task InsertSensor()
+    {
+        _sensorToInsert = new SensorViewModel();
+        await _sensorDataGrid.InsertRow(_sensorToInsert);
+    }
+
+    // Callback function for save button in a sensor row
+    async Task SaveSensorRow(SensorViewModel sensor)
+    {
+        if (sensor == _sensorToInsert)
+        {
+            _sensorToInsert = null;
+        }
 
         await _sensorDataGrid.UpdateRow(sensor);
     }
 
+    // Callback function for cancel button in a sensor row
     void CancelSensorEdit(SensorViewModel sensor)
     {
         if (sensor == _sensorToInsert)
@@ -295,6 +337,7 @@
         }
     }
 
+    // Callback function for delete button in sensor raw
     async Task DeleteSensorRow(SensorViewModel sensor)
     {
         if (sensor == _sensorToInsert)
@@ -320,23 +363,14 @@
     async Task LoadSensors()
     {
         _sensors = await sensorAccessor.GetSensorsAsync();
-        _sensorViewModels = new List<SensorViewModel>();
-        foreach (Sensor sensor in _sensors)
-        {
-            _sensorViewModels.Add(new SensorViewModel(sensor));
-        }
+        _sensorViewModels = _sensors.Select(s => new SensorViewModel(s)).ToList();
         await _sensorDataGrid.Reload();
     }
 
     async Task LoadPlants()
     {
         var plants = await plantAccessor.GetPlantsAsync();
-        _plantViewModels = new List<PlantViewModel>();
-        foreach (Plant plant in plants)
-        {
-            _plantViewModels.Add(new PlantViewModel(plant));
-        }
-
+        _plantViewModels = plants.Select(p => new PlantViewModel(p)).ToList();
         await _plantDataGrid.Reload();
     }
 }

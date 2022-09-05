@@ -356,3 +356,5 @@ MigrationBackup/
 /PlantMonitorWebApp/Client/Properties/ServiceDependencies/PlantMonitorWebAppServer20220208190443 - Web Deploy/profile.arm.json
 /SensorService/Properties/ServiceDependencies/PlantSensorValue - Zip Deploy/profile.arm.json
 /SensorService/Properties/ServiceDependencies/PlantSensorValue - Zip Deploy1/profile.arm.json
+/PlantMonitorMobileApp/myapp.keystore
+/myapp.keystore
