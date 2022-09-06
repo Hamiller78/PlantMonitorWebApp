@@ -4,11 +4,12 @@
 
 .top-row {
     height: 3.5rem;
-    background-color: rgba(0,0,0,0.4);
+    background-color: #4cff00;
 }
 
 .navbar-brand {
     font-size: 1.1rem;
+    color: black;
 }
 
 .oi {
@@ -32,7 +33,7 @@
     }
 
     .nav-item ::deep a {
-        color: #d7d7d7;
+        color: black;
         border-radius: 4px;
         height: 3rem;
         display: flex;
@@ -42,12 +43,12 @@
 
 .nav-item ::deep a.active {
     background-color: rgba(255,255,255,0.25);
-    color: white;
+    color: darkseagreen;
 }
 
 .nav-item ::deep a:hover {
     background-color: rgba(255,255,255,0.1);
-    color: white;
+    color: darkseagreen;
 }
 
 @media (min-width: 641px) {
