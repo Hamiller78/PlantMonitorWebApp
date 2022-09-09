@@ -16,7 +16,7 @@ namespace SensorService
             try
             {
                 Values = incomingData.Values
-                            .Select(v => ((double?)Convert.ToDouble(v) / short.MaxValue, DateTime.Now))
+                            .Select(v => (ConvertToScale(v), DateTime.Now))
                             .ToArray();
             }
             catch
@@ -29,6 +29,13 @@ namespace SensorService
                              (null, DateTime.Now)
                          };
             }
+        }
+
+        private double? ConvertToScale(int valueFromRaspberryPi)
+        {
+            double? voltageRange = Convert.ToDouble(valueFromRaspberryPi) / short.MaxValue;
+            double? humidityRange = (0.45 - voltageRange) / (0.45 - 0.35); // scale 0.45-0.35 to 0-1
+            return humidityRange;
         }
     }
 }
