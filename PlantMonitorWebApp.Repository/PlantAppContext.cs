@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Npgsql.EntityFrameworkCore;
 using PlantMonitorWebApp.Shared.Models;
 
 namespace PlantMonitorWebApp.Repository

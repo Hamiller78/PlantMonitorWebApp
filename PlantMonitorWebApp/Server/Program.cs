@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer;
 using Microsoft.Extensions.Logging.AzureAppServices;
 
 using PlantMonitorWebApp.Repository;
@@ -31,7 +32,7 @@ builder.Services.AddSignalR();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-builder.Services.AddDbContext<PlantAppContext>(options => options.UseNpgsql(configuration.GetConnectionString("PlantWebDb")));
+builder.Services.AddDbContext<PlantAppContext>(options => options.UseSqlServer(configuration.GetConnectionString("PlantWebDb")));
 
 builder.Services.AddLogging(logging =>
 {
