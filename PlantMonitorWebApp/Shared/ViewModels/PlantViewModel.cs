@@ -10,7 +10,10 @@ public class PlantViewModel
     public string? ImageUrl { get; set; } = null;
     public int SensorId { get; set; } = -1;
     public string SensorName { get; set; } = string.Empty;
-    public string FormattedSensorValue => string.Format("{0,7:##0.000}%", 100 * SensorValue);
+    public string FormattedSensorValue
+        => SensorValue != -1d
+            ? string.Format("{0,7:##0.0}%", 100 * SensorValue)
+            : "offline";
     public double SensorValue { get; set; }  // Make this private?
     public int AlertLevel { get; set; } = 0;
     public bool IsAlertEnabled { get; set; } = false;
