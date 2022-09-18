@@ -8,6 +8,9 @@ namespace SensorService
 {
     public class SensorValues
     {
+        const double MAX_VALUE = 0.35;
+        const double MIN_VALUE = 0.5;
+
         public (double?, DateTime)[] Values { get; set; }
 
         public SensorValues() { } // Without this empty constructor the framework calls the other constructor with a null value
@@ -34,7 +37,7 @@ namespace SensorService
         private double? ConvertToScale(int valueFromRaspberryPi)
         {
             double? voltageRange = Convert.ToDouble(valueFromRaspberryPi) / short.MaxValue;
-            double? humidityRange = (0.45 - voltageRange) / (0.45 - 0.35); // scale 0.45-0.35 to 0-1
+            double? humidityRange = (MIN_VALUE - voltageRange) / (MIN_VALUE - MAX_VALUE);
             return humidityRange;
         }
     }
