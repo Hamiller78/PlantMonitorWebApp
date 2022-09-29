@@ -9,7 +9,7 @@ namespace SensorService
     public class SensorValues
     {
         const double MAX_VALUE = 0.35;
-        const double MIN_VALUE = 0.5;
+        const double MIN_VALUE = 0.65;
 
         public (double?, DateTime)[] Values { get; set; }
 
