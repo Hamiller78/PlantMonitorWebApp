@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\PlantMonitorWebApp.Repository\PlantMonitorWebApp.Repository.csproj" />
+    <ProjectReference Include="..\Client\PlantMonitorWebApp.Client.csproj" />
     <ProjectReference Include="..\Shared\PlantMonitorWebApp.Shared.csproj" />
   </ItemGroup>
 
