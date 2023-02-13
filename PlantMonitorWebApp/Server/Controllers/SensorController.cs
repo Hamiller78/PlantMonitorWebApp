@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 using PlantMonitorWebApp.Repository.Interfaces;
 using PlantMonitorWebApp.Shared.Models;
@@ -14,6 +15,7 @@ namespace PlantMonitorWebApp.Server.Controllers
         public SensorController(ISensorRepository sensorRepo)
             => _sensorRepo = sensorRepo;
 
+        [AllowAnonymous]
         [HttpGet("GetList")]
         public IActionResult List()
         {
@@ -27,6 +29,7 @@ namespace PlantMonitorWebApp.Server.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("Item/{id}")]
         public IActionResult Item(int id)
         {
@@ -45,6 +48,7 @@ namespace PlantMonitorWebApp.Server.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost("Insert")]
         public IActionResult Insert([FromBody]Sensor sensor)
         {
@@ -59,6 +63,7 @@ namespace PlantMonitorWebApp.Server.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost("Update")]
         public IActionResult Update([FromBody]Sensor sensor)
         {
@@ -73,6 +78,7 @@ namespace PlantMonitorWebApp.Server.Controllers
             }
         }
 
+        [Authorize]
         [HttpDelete("Delete/{id}")]
         public IActionResult Delete(int id)
         {

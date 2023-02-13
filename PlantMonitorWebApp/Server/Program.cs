@@ -1,7 +1,10 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.SqlServer;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Logging.AzureAppServices;
+using Microsoft.Identity.Web;
+using Microsoft.IdentityModel.Logging;
 
 using PlantMonitorWebApp.Repository;
 using PlantMonitorWebApp.Repository.Classes;
@@ -14,19 +17,17 @@ using PlantMonitorWebApp.Server.Services.ImageManager;
 using PlantMonitorWebApp.Server.Services.MessageSender;
 using PlantMonitorWebApp.Shared.Factories;
 using PlantMonitorWebApp.Shared.Interfaces;
-using Microsoft.Extensions.Azure;
 
 var builder = WebApplication.CreateBuilder(args);
+
+IdentityModelEventSource.ShowPII = true;
+
 var configuration = builder.Configuration;
 configuration.AddEnvironmentVariables();  // to load Azure WebApp configuration variables
 
-//builder.Host.ConfigureAppConfiguration(builder =>
-//{
-//    //Connect to your App Config Store using the connection string
-//    builder.AddEnvironmentVariables();
-//});
-
 // Add services to the container.
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
 builder.Services.AddSignalR();
 builder.Services.AddControllersWithViews();
@@ -93,6 +94,8 @@ app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthorization();
 
 app.MapRazorPages();
 app.MapControllers();
