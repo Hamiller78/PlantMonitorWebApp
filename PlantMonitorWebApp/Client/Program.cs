@@ -16,8 +16,11 @@ builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<PlantAccessor>();
 builder.Services.AddScoped<SensorAccessor>();
 
-builder.Services.AddHttpClient("PlantMonitorWebApp.ServerAPI", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
+builder.Services.AddHttpClient("ServerAPI.AuthenticatedAccess",
+                               client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
     .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
+builder.Services.AddHttpClient("ServerAPI.AnonymousAccess",
+                               client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
 
 // Supply HttpClient instances that include access tokens when making requests to the server project
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("PlantMonitorWebApp.ServerAPI"));
@@ -25,7 +28,9 @@ builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().Cre
 builder.Services.AddMsalAuthentication(options =>
 {
     builder.Configuration.Bind("AzureAd", options.ProviderOptions.Authentication);
-    options.ProviderOptions.DefaultAccessTokenScopes.Add(builder.Configuration.GetSection("ServerApi")["Scopes"]);
+    options.ProviderOptions
+           .DefaultAccessTokenScopes
+           .Add(builder.Configuration.GetSection("ServerApi")["Scopes"] ?? string.Empty);
 });
 
 await builder.Build().RunAsync();
