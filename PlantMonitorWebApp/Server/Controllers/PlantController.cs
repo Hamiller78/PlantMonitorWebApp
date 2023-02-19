@@ -7,7 +7,6 @@ using PlantMonitorWebApp.Shared.Models;
 
 namespace PlantMonitorWebApp.Server.Controllers
 {
-    [AllowAnonymous]
     [ApiController]
     [Route("/Plants")]
     public class PlantController : ControllerBase
