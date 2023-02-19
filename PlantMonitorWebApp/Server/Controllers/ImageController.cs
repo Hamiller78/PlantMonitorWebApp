@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using MimeMapping;
@@ -23,6 +24,7 @@ namespace PlantMonitorWebApp.Server.Controllers
             _storageHandler.InitStorage();
         }
 
+        [AllowAnonymous]
         [HttpGet("Fetch")]
         public IActionResult Item([FromQuery]string image)
         {
@@ -40,6 +42,7 @@ namespace PlantMonitorWebApp.Server.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost("Upload")]
         public IActionResult Upload(IFormFile file)
         {

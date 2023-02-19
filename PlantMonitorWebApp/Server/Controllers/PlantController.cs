@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 using PlantMonitorWebApp.Repository.Interfaces;
 using PlantMonitorWebApp.Server.Interfaces;
@@ -20,6 +21,7 @@ namespace PlantMonitorWebApp.Server.Controllers
             _imageStorageHandler.InitStorage();
         }
 
+        [AllowAnonymous]
         [HttpGet("GetList")]
         public IActionResult List()
         {
@@ -33,6 +35,7 @@ namespace PlantMonitorWebApp.Server.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("Item/{id}")]
         public IActionResult Item(int id)
         {
@@ -51,6 +54,7 @@ namespace PlantMonitorWebApp.Server.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost("Insert")]
         public IActionResult Insert([FromBody] Plant plant)
         {
@@ -65,6 +69,7 @@ namespace PlantMonitorWebApp.Server.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost("Update")]
         public IActionResult Update([FromBody] Plant plant)
         {
@@ -81,6 +86,7 @@ namespace PlantMonitorWebApp.Server.Controllers
             }
         }
 
+        [Authorize]
         [HttpDelete("Delete/{id}")]
         public IActionResult Delete(int id)
         {
