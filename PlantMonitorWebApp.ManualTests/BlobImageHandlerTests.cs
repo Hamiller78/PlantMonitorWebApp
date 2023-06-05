@@ -2,13 +2,9 @@
 using Microsoft.Extensions.Logging;
 using Moq;
 using PlantMonitorWebApp.Server.Services.ImageManager;
-using System;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using Xunit;
 
-namespace UnitTests
+namespace PlantMonitorWebApp.ManualTests
 {
     public class BlobImageHandlerTests
     {

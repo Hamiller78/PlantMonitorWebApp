@@ -1,7 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Sqlite;
-using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +10,7 @@ using PlantMonitorWebApp.Repository;
 using PlantMonitorWebApp.Shared.Models;
 using PlantMonitorWebApp.Shared.TestData;
 
-namespace UnitTests
+namespace PlantMonitorWebApp.ManualTests
 {
     public class PlantAppContextTests : IDisposable
     {

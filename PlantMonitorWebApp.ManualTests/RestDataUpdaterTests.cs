@@ -9,7 +9,7 @@ using System.Configuration;
 using System.Collections.Generic;
 using Xunit;
 
-namespace UnitTests
+namespace PlantMonitorWebApp.ManualTests
 {
     public class RestDataUpdaterTests : IDisposable
     {
