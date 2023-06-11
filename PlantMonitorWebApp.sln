@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MockSensorService", "MockSensorService\MockSensorService.csproj", "{4DABB462-31E4-47C5-938E-A6F27651F1E6}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlantMonitorWebApp.Server", "PlantMonitorWebApp\Server\PlantMonitorWebApp.Server.csproj", "{D9464726-0502-4F5C-AF8F-9461502B3F37}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlantMonitorWebApp.Client", "PlantMonitorWebApp\Client\PlantMonitorWebApp.Client.csproj", "{6FC80981-D8C3-48A4-BA52-EA5B7A1C6A85}"
@@ -15,9 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\Unit
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlantMonitorWebApp.Repository", "PlantMonitorWebApp.Repository\PlantMonitorWebApp.Repository.csproj", "{FB751E6E-F974-4B26-A478-717201626549}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SensorService", "SensorService\SensorService.csproj", "{BB573769-FA0D-4B03-8991-D2808DF9C6F3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlantMonitorWebApp.ManualTests", "PlantMonitorWebApp.ManualTests\PlantMonitorWebApp.ManualTests.csproj", "{C090D223-BF53-404A-8A2D-8FDF9FDCD3CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlantMonitorWebApp.ManualTests", "PlantMonitorWebApp.ManualTests\PlantMonitorWebApp.ManualTests.csproj", "{C090D223-BF53-404A-8A2D-8FDF9FDCD3CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +21,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4DABB462-31E4-47C5-938E-A6F27651F1E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4DABB462-31E4-47C5-938E-A6F27651F1E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4DABB462-31E4-47C5-938E-A6F27651F1E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4DABB462-31E4-47C5-938E-A6F27651F1E6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D9464726-0502-4F5C-AF8F-9461502B3F37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D9464726-0502-4F5C-AF8F-9461502B3F37}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9464726-0502-4F5C-AF8F-9461502B3F37}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -49,10 +41,6 @@ Global
 		{FB751E6E-F974-4B26-A478-717201626549}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB751E6E-F974-4B26-A478-717201626549}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB751E6E-F974-4B26-A478-717201626549}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BB573769-FA0D-4B03-8991-D2808DF9C6F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BB573769-FA0D-4B03-8991-D2808DF9C6F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BB573769-FA0D-4B03-8991-D2808DF9C6F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BB573769-FA0D-4B03-8991-D2808DF9C6F3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C090D223-BF53-404A-8A2D-8FDF9FDCD3CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C090D223-BF53-404A-8A2D-8FDF9FDCD3CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C090D223-BF53-404A-8A2D-8FDF9FDCD3CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
