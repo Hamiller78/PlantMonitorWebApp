@@ -22,3 +22,10 @@ jobs:
         run: dotnet build --configuration Release --no-restore
       - name: Test
         run: dotnet test --filter "FullyQualifiedName~UnitTests" --no-restore --verbosity normal
+      - name: dotnet publish
+        run: dotnet publish --configuration Release --output ${{env.DOTNET_ROOT}}/myapp
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v2
+        with:
+          name: .net-app
+          path: ${{env.DOTNET_ROOT}}/myapp
